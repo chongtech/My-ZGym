@@ -43,12 +43,12 @@ export default function LoginScreen() {
 
   useEffect(() => {
     translateX.value = withRepeat(
-      withTiming(-30, { duration: 8000, easing: Easing.inOut(Easing.ease) }),
+      withTiming(-50, { duration: 6000, easing: Easing.inOut(Easing.ease) }),
       -1,
       true
     );
     translateY.value = withRepeat(
-      withTiming(-20, { duration: 10000, easing: Easing.inOut(Easing.ease) }),
+      withTiming(-40, { duration: 8000, easing: Easing.inOut(Easing.ease) }),
       -1,
       true
     );
@@ -58,7 +58,7 @@ export default function LoginScreen() {
     transform: [
       { translateX: translateX.value },
       { translateY: translateY.value },
-      { scale: 1.15 },
+      { scale: 1.2 },
     ],
   }));
 
@@ -239,10 +239,10 @@ const styles = StyleSheet.create({
   },
   backgroundContainer: {
     position: "absolute",
-    width: SCREEN_WIDTH + 60,
-    height: SCREEN_HEIGHT + 40,
-    top: -20,
-    left: -30,
+    width: SCREEN_WIDTH + 100,
+    height: SCREEN_HEIGHT + 80,
+    top: -40,
+    left: -50,
   },
   background: {
     flex: 1,

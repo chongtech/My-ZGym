@@ -71,13 +71,10 @@ export default function LoginScreen() {
       >
         <View style={styles.logoContainer}>
           <Image
-            source={require("../../assets/images/splash-icon.png")}
+            source={require("../../assets/images/zgym-logo.png")}
             style={styles.logo}
             resizeMode="contain"
           />
-          <ThemedText type="h1" style={styles.appName}>
-            My-ZGym
-          </ThemedText>
           <ThemedText type="body" style={styles.tagline}>
             Your fitness journey starts here
           </ThemedText>
@@ -191,16 +188,9 @@ const styles = StyleSheet.create({
     marginBottom: Spacing["3xl"],
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 220,
+    height: 62,
     marginBottom: Spacing.lg,
-  },
-  appName: {
-    color: "#FFFFFF",
-    fontSize: 36,
-    fontWeight: "800",
-    letterSpacing: 2,
-    marginBottom: Spacing.sm,
   },
   tagline: {
     color: "rgba(255,255,255,0.8)",

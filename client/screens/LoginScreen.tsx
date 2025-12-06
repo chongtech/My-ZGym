@@ -5,44 +5,36 @@ import {
   TextInput,
   Pressable,
   ActivityIndicator,
+  ImageBackground,
   Image,
-  Platform,
+  Dimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BlurView } from "expo-blur";
 import { Feather } from "@expo/vector-icons";
 
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { ThemedText } from "@/components/ThemedText";
-import { Button } from "@/components/Button";
-import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/context/AuthContext";
 import { Spacing, BorderRadius, BrandColors } from "@/constants/theme";
 
-type AuthMode = "login" | "signup";
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function LoginScreen() {
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
   const { login } = useAuth();
 
-  const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleLogin = async () => {
     setError("");
 
     if (!email || !password) {
       setError("Please fill in all fields");
-      return;
-    }
-
-    if (mode === "signup" && password !== confirmPassword) {
-      setError("Passwords do not match");
       return;
     }
 
@@ -59,18 +51,19 @@ export default function LoginScreen() {
     }
   };
 
-  const handleSocialLogin = (provider: string) => {
-    setError(`${provider} login is not available in demo mode`);
-  };
-
   return (
-    <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
+    <ImageBackground
+      source={require("../../assets/images/login-background.png")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.overlay} />
       <KeyboardAwareScrollViewCompat
         style={styles.scrollView}
         contentContainerStyle={[
           styles.content,
           {
-            paddingTop: insets.top + Spacing.xl,
+            paddingTop: insets.top + Spacing["2xl"],
             paddingBottom: insets.bottom + Spacing.xl,
           },
         ]}
@@ -78,211 +71,111 @@ export default function LoginScreen() {
       >
         <View style={styles.logoContainer}>
           <Image
-            source={require("../../assets/images/zgym-logo.png")}
+            source={require("../../assets/images/splash-icon.png")}
             style={styles.logo}
             resizeMode="contain"
           />
-          <ThemedText type="h2" style={styles.appName}>
+          <ThemedText type="h1" style={styles.appName}>
             My-ZGym
           </ThemedText>
-          <ThemedText type="body" style={[styles.subtitle, { color: theme.textSecondary }]}>
+          <ThemedText type="body" style={styles.tagline}>
             Your fitness journey starts here
           </ThemedText>
         </View>
 
-        <View style={styles.tabContainer}>
-          <Pressable
-            style={[
-              styles.tab,
-              mode === "login" && { backgroundColor: BrandColors.primary },
-            ]}
-            onPress={() => setMode("login")}
-          >
-            <ThemedText
-              type="button"
-              style={[
-                styles.tabText,
-                { color: mode === "login" ? "#FFFFFF" : theme.textSecondary },
-              ]}
-            >
-              Login
+        <BlurView intensity={40} tint="dark" style={styles.glassCard}>
+          <View style={styles.cardContent}>
+            <ThemedText type="h3" style={styles.welcomeText}>
+              Welcome Back
             </ThemedText>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.tab,
-              mode === "signup" && { backgroundColor: BrandColors.primary },
-            ]}
-            onPress={() => setMode("signup")}
-          >
-            <ThemedText
-              type="button"
-              style={[
-                styles.tabText,
-                { color: mode === "signup" ? "#FFFFFF" : theme.textSecondary },
-              ]}
-            >
-              Sign Up
-            </ThemedText>
-          </Pressable>
-        </View>
 
-        {error ? (
-          <View style={[styles.errorContainer, { backgroundColor: `${BrandColors.error}15` }]}>
-            <Feather name="alert-circle" size={18} color={BrandColors.error} />
-            <ThemedText type="small" style={[styles.errorText, { color: BrandColors.error }]}>
-              {error}
-            </ThemedText>
-          </View>
-        ) : null}
+            {error ? (
+              <View style={styles.errorContainer}>
+                <Feather name="alert-circle" size={16} color={BrandColors.error} />
+                <ThemedText type="small" style={styles.errorText}>
+                  {error}
+                </ThemedText>
+              </View>
+            ) : null}
 
-        <View style={styles.form}>
-          <View style={styles.inputContainer}>
-            <ThemedText type="small" style={styles.label}>
-              Email
-            </ThemedText>
-            <View style={[styles.inputWrapper, { borderColor: theme.border }]}>
-              <Feather name="mail" size={18} color={theme.textSecondary} style={styles.inputIcon} />
-              <TextInput
-                style={[styles.input, { color: theme.text }]}
-                placeholder="Enter your email"
-                placeholderTextColor={theme.textSecondary}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
-          </View>
-
-          <View style={styles.inputContainer}>
-            <ThemedText type="small" style={styles.label}>
-              Password
-            </ThemedText>
-            <View style={[styles.inputWrapper, { borderColor: theme.border }]}>
-              <Feather name="lock" size={18} color={theme.textSecondary} style={styles.inputIcon} />
-              <TextInput
-                style={[styles.input, { color: theme.text }]}
-                placeholder="Enter your password"
-                placeholderTextColor={theme.textSecondary}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-              />
-              <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
-                <Feather
-                  name={showPassword ? "eye-off" : "eye"}
-                  size={18}
-                  color={theme.textSecondary}
-                />
-              </Pressable>
-            </View>
-          </View>
-
-          {mode === "signup" ? (
             <View style={styles.inputContainer}>
-              <ThemedText type="small" style={styles.label}>
-                Confirm Password
-              </ThemedText>
-              <View style={[styles.inputWrapper, { borderColor: theme.border }]}>
-                <Feather name="lock" size={18} color={theme.textSecondary} style={styles.inputIcon} />
+              <View style={styles.inputWrapper}>
+                <Feather name="mail" size={20} color="rgba(255,255,255,0.6)" style={styles.inputIcon} />
                 <TextInput
-                  style={[styles.input, { color: theme.text }]}
-                  placeholder="Confirm your password"
-                  placeholderTextColor={theme.textSecondary}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  secureTextEntry={!showPassword}
+                  style={styles.input}
+                  placeholder="Email"
+                  placeholderTextColor="rgba(255,255,255,0.5)"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
                 />
               </View>
             </View>
-          ) : null}
 
-          <Button onPress={handleSubmit} disabled={isLoading} style={styles.submitButton}>
-            {isLoading ? (
-              <ActivityIndicator color="#FFFFFF" size="small" />
-            ) : (
-              mode === "login" ? "Login" : "Create Account"
-            )}
-          </Button>
+            <View style={styles.inputContainer}>
+              <View style={styles.inputWrapper}>
+                <Feather name="lock" size={20} color="rgba(255,255,255,0.6)" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  placeholderTextColor="rgba(255,255,255,0.5)"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                />
+                <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
+                  <Feather
+                    name={showPassword ? "eye-off" : "eye"}
+                    size={20}
+                    color="rgba(255,255,255,0.6)"
+                  />
+                </Pressable>
+              </View>
+            </View>
 
-          {mode === "login" ? (
+            <Pressable
+              style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
+              onPress={handleLogin}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator color="#FFFFFF" size="small" />
+              ) : (
+                <ThemedText type="button" style={styles.loginButtonText}>
+                  Login
+                </ThemedText>
+              )}
+            </Pressable>
+
             <Pressable style={styles.forgotPassword}>
-              <ThemedText type="link" style={{ color: BrandColors.primary }}>
+              <ThemedText type="small" style={styles.forgotPasswordText}>
                 Forgot Password?
               </ThemedText>
             </Pressable>
-          ) : null}
-        </View>
-
-        <View style={styles.dividerContainer}>
-          <View style={[styles.divider, { backgroundColor: theme.border }]} />
-          <ThemedText type="small" style={[styles.dividerText, { color: theme.textSecondary }]}>
-            or continue with
-          </ThemedText>
-          <View style={[styles.divider, { backgroundColor: theme.border }]} />
-        </View>
-
-        <View style={styles.socialButtons}>
-          <Pressable
-            style={[styles.socialButton, { backgroundColor: "#000000" }]}
-            onPress={() => handleSocialLogin("Apple")}
-          >
-            <Feather name="smartphone" size={20} color="#FFFFFF" />
-            <ThemedText type="button" style={styles.socialButtonText}>
-              Apple
-            </ThemedText>
-          </Pressable>
-          <Pressable
-            style={[styles.socialButton, { backgroundColor: theme.backgroundDefault, borderColor: theme.border, borderWidth: 1 }]}
-            onPress={() => handleSocialLogin("Google")}
-          >
-            <Feather name="mail" size={20} color={theme.text} />
-            <ThemedText type="button" style={[styles.socialButtonText, { color: theme.text }]}>
-              Google
-            </ThemedText>
-          </Pressable>
-        </View>
+          </View>
+        </BlurView>
 
         <View style={styles.demoInfo}>
-          <ThemedText type="small" style={[styles.demoTitle, { color: theme.textSecondary }]}>
-            Demo Accounts:
+          <ThemedText type="small" style={styles.demoText}>
+            Demo: member@zgym.com / member123
           </ThemedText>
-          <ThemedText type="small" style={{ color: theme.textSecondary }}>
-            member@zgym.com / member123
-          </ThemedText>
-          <ThemedText type="small" style={{ color: theme.textSecondary }}>
-            new@zgym.com / new123 (incomplete profile)
-          </ThemedText>
-        </View>
-
-        <View style={styles.footer}>
-          <ThemedText type="small" style={{ color: theme.textSecondary }}>
-            By continuing, you agree to our{" "}
-          </ThemedText>
-          <Pressable>
-            <ThemedText type="link" style={{ color: BrandColors.primary, fontSize: 13 }}>
-              Terms of Service
-            </ThemedText>
-          </Pressable>
-          <ThemedText type="small" style={{ color: theme.textSecondary }}>
-            {" "}and{" "}
-          </ThemedText>
-          <Pressable>
-            <ThemedText type="link" style={{ color: BrandColors.primary, fontSize: 13 }}>
-              Privacy Policy
-            </ThemedText>
-          </Pressable>
         </View>
       </KeyboardAwareScrollViewCompat>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.4)",
   },
   scrollView: {
     flex: 1,
@@ -290,130 +183,109 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     paddingHorizontal: Spacing.xl,
+    justifyContent: "center",
+    minHeight: SCREEN_HEIGHT,
   },
   logoContainer: {
     alignItems: "center",
-    marginBottom: Spacing["2xl"],
+    marginBottom: Spacing["3xl"],
   },
   logo: {
-    width: 140,
-    height: 40,
+    width: 120,
+    height: 120,
     marginBottom: Spacing.lg,
   },
   appName: {
-    marginBottom: Spacing.xs,
+    color: "#FFFFFF",
+    fontSize: 36,
+    fontWeight: "800",
+    letterSpacing: 2,
+    marginBottom: Spacing.sm,
   },
-  subtitle: {
-    textAlign: "center",
+  tagline: {
+    color: "rgba(255,255,255,0.8)",
+    fontSize: 16,
   },
-  tabContainer: {
-    flexDirection: "row",
-    backgroundColor: "transparent",
-    borderRadius: BorderRadius.lg,
-    marginBottom: Spacing.xl,
+  glassCard: {
+    borderRadius: BorderRadius.xl,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: BrandColors.primary,
+    borderColor: "rgba(255,255,255,0.15)",
   },
-  tab: {
-    flex: 1,
-    paddingVertical: Spacing.md,
-    alignItems: "center",
+  cardContent: {
+    padding: Spacing.xl,
+    gap: Spacing.lg,
   },
-  tabText: {
-    fontWeight: "600",
+  welcomeText: {
+    color: "#FFFFFF",
+    textAlign: "center",
+    marginBottom: Spacing.sm,
   },
   errorContainer: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "rgba(231,76,60,0.2)",
     padding: Spacing.md,
     borderRadius: BorderRadius.sm,
-    marginBottom: Spacing.lg,
     gap: Spacing.sm,
   },
   errorText: {
+    color: BrandColors.error,
     flex: 1,
-  },
-  form: {
-    gap: Spacing.lg,
   },
   inputContainer: {
     gap: Spacing.xs,
   },
-  label: {
-    fontWeight: "500",
-  },
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    height: Spacing.inputHeight,
-    borderWidth: 1,
-    borderRadius: BorderRadius.sm,
+    height: 56,
+    backgroundColor: "rgba(255,255,255,0.1)",
+    borderRadius: BorderRadius.md,
     paddingHorizontal: Spacing.md,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
   },
   inputIcon: {
-    marginRight: Spacing.sm,
+    marginRight: Spacing.md,
   },
   input: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 16,
+    color: "#FFFFFF",
   },
   eyeButton: {
     padding: Spacing.xs,
   },
-  submitButton: {
-    marginTop: Spacing.sm,
+  loginButton: {
     backgroundColor: BrandColors.primary,
+    height: 56,
     borderRadius: BorderRadius.md,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: Spacing.sm,
+  },
+  loginButtonDisabled: {
+    opacity: 0.7,
+  },
+  loginButtonText: {
+    color: "#FFFFFF",
+    fontSize: 17,
+    fontWeight: "700",
   },
   forgotPassword: {
     alignSelf: "center",
     paddingVertical: Spacing.sm,
   },
-  dividerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: Spacing.xl,
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-  },
-  dividerText: {
-    marginHorizontal: Spacing.md,
-  },
-  socialButtons: {
-    flexDirection: "row",
-    gap: Spacing.md,
-  },
-  socialButton: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: Spacing.md,
-    borderRadius: BorderRadius.md,
-    gap: Spacing.sm,
-  },
-  socialButtonText: {
-    color: "#FFFFFF",
+  forgotPasswordText: {
+    color: "rgba(255,255,255,0.7)",
   },
   demoInfo: {
-    marginTop: Spacing.xl,
-    padding: Spacing.lg,
-    backgroundColor: "rgba(0,0,0,0.03)",
-    borderRadius: BorderRadius.md,
+    marginTop: Spacing["2xl"],
     alignItems: "center",
-    gap: Spacing.xs,
   },
-  demoTitle: {
-    fontWeight: "600",
-    marginBottom: Spacing.xs,
-  },
-  footer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    marginTop: Spacing.xl,
+  demoText: {
+    color: "rgba(255,255,255,0.5)",
+    fontSize: 12,
   },
 });

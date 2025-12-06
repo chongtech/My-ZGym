@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -8,16 +8,10 @@ import {
   ImageBackground,
   Dimensions,
   Platform,
+  Image,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withTiming,
-  Easing,
-} from "react-native-reanimated";
 
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -49,30 +43,6 @@ export default function LoginScreen() {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
 
-  const translateX = useSharedValue(0);
-  const translateY = useSharedValue(0);
-
-  useEffect(() => {
-    translateX.value = withRepeat(
-      withTiming(-50, { duration: 6000, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true
-    );
-    translateY.value = withRepeat(
-      withTiming(-40, { duration: 8000, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true
-    );
-  }, []);
-
-  const animatedBackgroundStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: translateX.value },
-      { translateY: translateY.value },
-      { scale: 1.2 },
-    ],
-  }));
-
   const handleLogin = async () => {
     setError("");
 
@@ -99,14 +69,11 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.backgroundContainer, animatedBackgroundStyle]}>
-        <ImageBackground
-          source={require("../../assets/images/login-background.png")}
-          style={styles.background}
-          resizeMode="cover"
-        />
-      </Animated.View>
+    <ImageBackground
+      source={require("../../assets/images/login-background.png")}
+      style={styles.container}
+      resizeMode="cover"
+    >
       <View style={styles.overlay} />
       
       <KeyboardAwareScrollViewCompat
@@ -120,9 +87,13 @@ export default function LoginScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        <Pressable style={styles.backButton}>
-          <Feather name="arrow-left" size={24} color="#FFFFFF" />
-        </Pressable>
+        <View style={styles.logoContainer}>
+          <Image
+            source={require("../../assets/images/zgym-logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </View>
 
         <View style={styles.headerContainer}>
           <ThemedText type="h1" style={styles.welcomeText}>
@@ -249,7 +220,7 @@ export default function LoginScreen() {
           </ThemedText>
         </View>
       </KeyboardAwareScrollViewCompat>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -281,11 +252,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: Spacing.xl,
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
+  logoContainer: {
+    alignItems: "center",
     marginBottom: Spacing.xl,
+  },
+  logo: {
+    width: 150,
+    height: 60,
   },
   headerContainer: {
     marginBottom: Spacing["2xl"],

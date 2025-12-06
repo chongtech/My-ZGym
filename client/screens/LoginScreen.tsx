@@ -19,10 +19,14 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { ThemedText } from "@/components/ThemedText";
 import { useAuth } from "@/context/AuthContext";
 import { Spacing, BorderRadius } from "@/constants/theme";
+import { RootStackParamList } from "@/navigation/RootStackNavigator";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -31,6 +35,11 @@ const LIME_GREEN = "#BFFF00";
 export default function LoginScreen() {
   const insets = useSafeAreaInsets();
   const { login } = useAuth();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const handleGoToRegister = () => {
+    navigation.navigate("Register");
+  };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -227,7 +236,7 @@ export default function LoginScreen() {
           <ThemedText type="body" style={styles.registerText}>
             Não tens conta?{" "}
           </ThemedText>
-          <Pressable>
+          <Pressable onPress={handleGoToRegister}>
             <ThemedText type="body" style={styles.registerLink}>
               Registar
             </ThemedText>

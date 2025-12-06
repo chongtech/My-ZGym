@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import MainTabNavigator from "@/navigation/MainTabNavigator";
 import LoginScreen from "@/screens/LoginScreen";
+import RegisterScreen from "@/screens/RegisterScreen";
 import ProfileCompletionScreen from "@/screens/ProfileCompletionScreen";
 import { useScreenOptions } from "@/hooks/useScreenOptions";
 import { useAuth } from "@/context/AuthContext";
@@ -12,6 +13,7 @@ import { BrandColors } from "@/constants/theme";
 
 export type RootStackParamList = {
   Login: undefined;
+  Register: undefined;
   ProfileCompletion: undefined;
   Main: undefined;
 };
@@ -34,11 +36,18 @@ export default function RootStackNavigator() {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       {!isAuthenticated ? (
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
+        <>
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{ headerShown: false }}
+          />
+        </>
       ) : !user?.isProfileComplete ? (
         <Stack.Screen
           name="ProfileCompletion"

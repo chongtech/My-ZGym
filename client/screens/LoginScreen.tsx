@@ -37,6 +37,8 @@ export default function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
 
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -131,7 +133,10 @@ export default function LoginScreen() {
         ) : null}
 
         <View style={styles.form}>
-          <View style={styles.inputWrapper}>
+          <View style={[
+            styles.inputWrapper,
+            emailFocused && { borderColor: LIME_GREEN, borderWidth: 2 }
+          ]}>
             <TextInput
               style={styles.input}
               placeholder="Email"
@@ -141,10 +146,15 @@ export default function LoginScreen() {
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
+              onFocus={() => setEmailFocused(true)}
+              onBlur={() => setEmailFocused(false)}
             />
           </View>
 
-          <View style={styles.inputWrapper}>
+          <View style={[
+            styles.inputWrapper,
+            passwordFocused && { borderColor: LIME_GREEN, borderWidth: 2 }
+          ]}>
             <TextInput
               style={styles.input}
               placeholder="Palavra-passe"
@@ -152,12 +162,14 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
+              onFocus={() => setPasswordFocused(true)}
+              onBlur={() => setPasswordFocused(false)}
             />
             <Pressable onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
               <Feather
                 name={showPassword ? "eye-off" : "eye"}
                 size={20}
-                color="rgba(255,255,255,0.5)"
+                color={passwordFocused ? LIME_GREEN : "rgba(255,255,255,0.5)"}
               />
             </Pressable>
           </View>

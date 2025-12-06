@@ -3,30 +3,30 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
 import { HeaderButton } from "@react-navigation/elements";
 
-import ProfileScreen from "@/screens/ProfileScreen";
+import ScheduleScreen from "@/screens/ScheduleScreen";
 import { useScreenOptions } from "@/hooks/useScreenOptions";
 import { useTheme } from "@/hooks/useTheme";
 
-export type ProfileStackParamList = {
-  Profile: undefined;
+export type ScheduleStackParamList = {
+  Schedule: undefined;
 };
 
-const Stack = createNativeStackNavigator<ProfileStackParamList>();
+const Stack = createNativeStackNavigator<ScheduleStackParamList>();
 
-export default function ProfileStackNavigator() {
+export default function ScheduleStackNavigator() {
   const screenOptions = useScreenOptions();
   const { theme } = useTheme();
 
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="Schedule"
+        component={ScheduleScreen}
         options={{
-          headerTitle: "Profile",
+          headerTitle: "Schedule",
           headerRight: () => (
             <HeaderButton onPress={() => {}}>
-              <Feather name="settings" size={20} color={theme.text} />
+              <Feather name="search" size={20} color={theme.text} />
             </HeaderButton>
           ),
         }}

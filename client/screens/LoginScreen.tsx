@@ -309,10 +309,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 56,
     backgroundColor: "rgba(255,255,255,0.08)",
-    borderRadius: BorderRadius.lg,
+    borderRadius: 28,
     paddingHorizontal: Spacing.lg,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: "rgba(255,255,255,0.15)",
+    overflow: "hidden",
   },
   input: {
     flex: 1,
@@ -334,7 +335,7 @@ const styles = StyleSheet.create({
   loginButton: {
     backgroundColor: LIME_GREEN,
     height: 56,
-    borderRadius: BorderRadius.xl,
+    borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
     marginTop: Spacing.md,

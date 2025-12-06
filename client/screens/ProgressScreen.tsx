@@ -17,10 +17,10 @@ import {
 } from "@/data/mockData";
 
 const statCards = [
-  { key: "workouts", label: "Workouts", value: memberStats.totalWorkouts, icon: "activity" },
-  { key: "classes", label: "Classes", value: memberStats.totalClasses, icon: "users" },
-  { key: "calories", label: "Calories", value: memberStats.totalCalories.toLocaleString(), icon: "zap" },
-  { key: "prs", label: "PRs", value: memberStats.personalRecords, icon: "award" },
+  { key: "workouts", label: "Treinos", value: memberStats.totalWorkouts, icon: "activity" },
+  { key: "classes", label: "Aulas", value: memberStats.totalClasses, icon: "users" },
+  { key: "calories", label: "Calorias", value: memberStats.totalCalories.toLocaleString("pt-PT"), icon: "zap" },
+  { key: "prs", label: "Recordes", value: memberStats.personalRecords, icon: "award" },
 ];
 
 export default function ProgressScreen() {
@@ -33,7 +33,7 @@ export default function ProgressScreen() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    return date.toLocaleDateString("pt-PT", { month: "short", day: "numeric" });
   };
 
   return (
@@ -66,9 +66,9 @@ export default function ProgressScreen() {
 
       <Card style={styles.chartCard} elevation={1}>
         <View style={styles.chartHeader}>
-          <ThemedText type="h4">Weekly Activity</ThemedText>
+          <ThemedText type="h4">Atividade Semanal</ThemedText>
           <ThemedText type="small" style={{ color: theme.textSecondary }}>
-            Calories burned
+            Calorias queimadas
           </ThemedText>
         </View>
         <View style={styles.chartContainer}>
@@ -102,10 +102,10 @@ export default function ProgressScreen() {
 
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <ThemedText type="h4">Achievements</ThemedText>
+          <ThemedText type="h4">Conquistas</ThemedText>
           <Pressable style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
             <ThemedText type="link" style={{ color: BrandColors.primary }}>
-              See all
+              Ver todas
             </ThemedText>
           </Pressable>
         </View>
@@ -158,10 +158,10 @@ export default function ProgressScreen() {
 
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <ThemedText type="h4">Recent Workouts</ThemedText>
+          <ThemedText type="h4">Treinos Recentes</ThemedText>
           <Pressable style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
             <ThemedText type="link" style={{ color: BrandColors.primary }}>
-              See all
+              Ver todos
             </ThemedText>
           </Pressable>
         </View>
@@ -212,10 +212,10 @@ export default function ProgressScreen() {
         <View style={styles.emptyState}>
           <Feather name="trending-up" size={48} color={theme.textSecondary} />
           <ThemedText type="h4" style={[styles.emptyTitle, { color: theme.textSecondary }]}>
-            Start your fitness journey!
+            Começa a tua jornada fitness!
           </ThemedText>
           <ThemedText type="body" style={{ color: theme.textSecondary, textAlign: "center" }}>
-            Complete your first workout to see your progress here
+            Completa o teu primeiro treino para veres o teu progresso aqui
           </ThemedText>
         </View>
       ) : null}

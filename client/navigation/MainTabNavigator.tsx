@@ -53,7 +53,7 @@ export default function MainTabNavigator() {
         name="HomeTab"
         component={HomeStackNavigator}
         options={{
-          title: "Home",
+          title: "Início",
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />
           ),
@@ -63,7 +63,7 @@ export default function MainTabNavigator() {
         name="ScheduleTab"
         component={ScheduleStackNavigator}
         options={{
-          title: "Schedule",
+          title: "Horário",
           tabBarIcon: ({ color, size }) => (
             <Feather name="calendar" size={size} color={color} />
           ),
@@ -73,7 +73,7 @@ export default function MainTabNavigator() {
         name="ProgressTab"
         component={ProgressStackNavigator}
         options={{
-          title: "Progress",
+          title: "Progresso",
           tabBarIcon: ({ color, size }) => (
             <Feather name="trending-up" size={size} color={color} />
           ),
@@ -83,7 +83,7 @@ export default function MainTabNavigator() {
         name="ProfileTab"
         component={ProfileStackNavigator}
         options={{
-          title: "Profile",
+          title: "Perfil",
           tabBarIcon: ({ color, size }) => (
             <Feather name="user" size={size} color={color} />
           ),

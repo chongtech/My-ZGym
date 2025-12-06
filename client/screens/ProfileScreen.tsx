@@ -87,12 +87,12 @@ export default function ProfileScreen() {
 
   const handleLogout = () => {
     Alert.alert(
-      "Log Out",
-      "Are you sure you want to log out?",
+      "Terminar Sessão",
+      "Tens a certeza que queres terminar sessão?",
       [
-        { text: "Cancel", style: "cancel" },
+        { text: "Cancelar", style: "cancel" },
         {
-          text: "Log Out",
+          text: "Terminar",
           style: "destructive",
           onPress: () => logout(),
         },
@@ -102,21 +102,21 @@ export default function ProfileScreen() {
 
   const handleDeleteAccount = () => {
     Alert.alert(
-      "Delete Account",
-      "Are you sure you want to delete your account? This action cannot be undone.",
+      "Eliminar Conta",
+      "Tens a certeza que queres eliminar a tua conta? Esta ação não pode ser desfeita.",
       [
-        { text: "Cancel", style: "cancel" },
+        { text: "Cancelar", style: "cancel" },
         {
-          text: "Delete",
+          text: "Eliminar",
           style: "destructive",
           onPress: () => {
             Alert.alert(
-              "Confirm Deletion",
-              "This will permanently delete all your data. Are you absolutely sure?",
+              "Confirmar Eliminação",
+              "Isto irá eliminar permanentemente todos os teus dados. Tens a certeza absoluta?",
               [
-                { text: "Cancel", style: "cancel" },
+                { text: "Cancelar", style: "cancel" },
                 {
-                  text: "Yes, Delete",
+                  text: "Sim, Eliminar",
                   style: "destructive",
                   onPress: () => logout(),
                 },
@@ -129,7 +129,7 @@ export default function ProfileScreen() {
   };
 
   const formatMemberSince = (date: string) => {
-    return new Date(date).toLocaleDateString("en-US", {
+    return new Date(date).toLocaleDateString("pt-PT", {
       month: "long",
       year: "numeric",
     });
@@ -151,9 +151,9 @@ export default function ProfileScreen() {
           <Feather name="user" size={40} color={theme.textSecondary} />
         </View>
         <View style={styles.profileInfo}>
-          <ThemedText type="h2">{user?.fullName || "Member"}</ThemedText>
+          <ThemedText type="h2">{user?.fullName || "Membro"}</ThemedText>
           <ThemedText type="body" style={{ color: theme.textSecondary }}>
-            Member since {user?.memberSince ? formatMemberSince(user.memberSince) : "N/A"}
+            Membro desde {user?.memberSince ? formatMemberSince(user.memberSince) : "N/A"}
           </ThemedText>
         </View>
         <Pressable
@@ -168,70 +168,70 @@ export default function ProfileScreen() {
 
       <Card style={styles.section} elevation={1}>
         <ThemedText type="h4" style={styles.sectionTitle}>
-          Personal Information
+          Informação Pessoal
         </ThemedText>
         <SettingItem
           icon="mail"
           label="Email"
-          value={user?.email || "Not set"}
+          value={user?.email || "Não definido"}
           showChevron={false}
         />
         <SettingItem
           icon="phone"
-          label="Phone"
-          value={user?.phone || "Not set"}
+          label="Telefone"
+          value={user?.phone || "Não definido"}
         />
         <SettingItem
           icon="alert-circle"
-          label="Emergency Contact"
-          value={user?.emergencyContactName || "Not set"}
+          label="Contacto de Emergência"
+          value={user?.emergencyContactName || "Não definido"}
         />
       </Card>
 
       <Card style={styles.section} elevation={1}>
         <ThemedText type="h4" style={styles.sectionTitle}>
-          Preferences
+          Preferências
         </ThemedText>
         <SettingItem
           icon="bell"
-          label="Notifications"
+          label="Notificações"
           showSwitch
           switchValue={notificationsEnabled}
           onSwitchChange={setNotificationsEnabled}
         />
-        <SettingItem icon="moon" label="Theme" value="System" />
-        <SettingItem icon="globe" label="Language" value="English" />
+        <SettingItem icon="moon" label="Tema" value="Sistema" />
+        <SettingItem icon="globe" label="Idioma" value="Português" />
       </Card>
 
       <Card style={styles.section} elevation={1}>
         <ThemedText type="h4" style={styles.sectionTitle}>
-          Membership
+          Subscrição
         </ThemedText>
         <SettingItem
           icon="credit-card"
-          label="Current Plan"
-          value={`${(user?.membershipTier || "bronze").charAt(0).toUpperCase() + (user?.membershipTier || "bronze").slice(1)} Membership`}
+          label="Plano Atual"
+          value={`Subscrição ${(user?.membershipTier || "bronze").charAt(0).toUpperCase() + (user?.membershipTier || "bronze").slice(1)}`}
         />
-        <SettingItem icon="calendar" label="Renewal Date" value={user?.membershipExpiry || "N/A"} />
-        <SettingItem icon="arrow-up-circle" label="Upgrade Plan" />
+        <SettingItem icon="calendar" label="Data de Renovação" value={user?.membershipExpiry || "N/A"} />
+        <SettingItem icon="arrow-up-circle" label="Atualizar Plano" />
       </Card>
 
       <Card style={styles.section} elevation={1}>
         <ThemedText type="h4" style={styles.sectionTitle}>
-          Account
+          Conta
         </ThemedText>
-        <SettingItem icon="lock" label="Change Password" />
-        <SettingItem icon="shield" label="Privacy Settings" />
-        <SettingItem icon="help-circle" label="Help & Support" />
+        <SettingItem icon="lock" label="Alterar Palavra-passe" />
+        <SettingItem icon="shield" label="Definições de Privacidade" />
+        <SettingItem icon="help-circle" label="Ajuda e Suporte" />
         <SettingItem
           icon="log-out"
-          label="Log Out"
+          label="Terminar Sessão"
           showChevron={false}
           onPress={handleLogout}
         />
         <SettingItem
           icon="trash-2"
-          label="Delete Account"
+          label="Eliminar Conta"
           showChevron={false}
           danger
           onPress={handleDeleteAccount}

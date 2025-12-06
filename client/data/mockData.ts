@@ -40,8 +40,8 @@ export interface WeeklyStats {
 export const mockClasses: GymClass[] = [
   {
     id: "1",
-    name: "Power Yoga",
-    instructor: "Sarah Chen",
+    name: "Yoga Dinâmico",
+    instructor: "Sara Costa",
     time: "07:00",
     duration: 60,
     difficulty: "intermediate",
@@ -52,8 +52,8 @@ export const mockClasses: GymClass[] = [
   },
   {
     id: "2",
-    name: "HIIT Blast",
-    instructor: "Mike Johnson",
+    name: "HIIT Intensivo",
+    instructor: "Miguel Santos",
     time: "08:30",
     duration: 45,
     difficulty: "advanced",
@@ -64,8 +64,8 @@ export const mockClasses: GymClass[] = [
   },
   {
     id: "3",
-    name: "Strength Training",
-    instructor: "Chris Williams",
+    name: "Treino de Força",
+    instructor: "Carlos Silva",
     time: "10:00",
     duration: 60,
     difficulty: "intermediate",
@@ -76,8 +76,8 @@ export const mockClasses: GymClass[] = [
   },
   {
     id: "4",
-    name: "Spin Class",
-    instructor: "Emma Davis",
+    name: "Aula de Spinning",
+    instructor: "Ana Ferreira",
     time: "12:00",
     duration: 45,
     difficulty: "beginner",
@@ -88,8 +88,8 @@ export const mockClasses: GymClass[] = [
   },
   {
     id: "5",
-    name: "Cardio Burn",
-    instructor: "James Miller",
+    name: "Cardio Queima",
+    instructor: "João Martins",
     time: "14:00",
     duration: 30,
     difficulty: "beginner",
@@ -101,7 +101,7 @@ export const mockClasses: GymClass[] = [
   {
     id: "6",
     name: "Pilates Core",
-    instructor: "Lisa Anderson",
+    instructor: "Inês Oliveira",
     time: "16:00",
     duration: 50,
     difficulty: "intermediate",
@@ -112,8 +112,8 @@ export const mockClasses: GymClass[] = [
   },
   {
     id: "7",
-    name: "Evening Yoga",
-    instructor: "Sarah Chen",
+    name: "Yoga ao Entardecer",
+    instructor: "Sara Costa",
     time: "18:00",
     duration: 60,
     difficulty: "beginner",
@@ -124,8 +124,8 @@ export const mockClasses: GymClass[] = [
   },
   {
     id: "8",
-    name: "Power Lifting",
-    instructor: "Chris Williams",
+    name: "Musculação Avançada",
+    instructor: "Carlos Silva",
     time: "19:30",
     duration: 75,
     difficulty: "advanced",
@@ -139,21 +139,21 @@ export const mockClasses: GymClass[] = [
 export const mockWorkouts: Workout[] = [
   {
     id: "1",
-    name: "Morning HIIT Session",
+    name: "Sessão HIIT Matinal",
     date: "2024-12-06",
     duration: 45,
     caloriesBurned: 450,
-    instructor: "Mike Johnson",
+    instructor: "Miguel Santos",
     type: "HIIT",
   },
   {
     id: "2",
-    name: "Strength Training",
+    name: "Treino de Força",
     date: "2024-12-05",
     duration: 60,
     caloriesBurned: 320,
-    instructor: "Chris Williams",
-    type: "Strength",
+    instructor: "Carlos Silva",
+    type: "Força",
   },
   {
     id: "3",
@@ -161,12 +161,12 @@ export const mockWorkouts: Workout[] = [
     date: "2024-12-04",
     duration: 60,
     caloriesBurned: 180,
-    instructor: "Sarah Chen",
+    instructor: "Sara Costa",
     type: "Yoga",
   },
   {
     id: "4",
-    name: "Cardio Session",
+    name: "Sessão de Cardio",
     date: "2024-12-03",
     duration: 30,
     caloriesBurned: 280,
@@ -174,11 +174,11 @@ export const mockWorkouts: Workout[] = [
   },
   {
     id: "5",
-    name: "Spin Class",
+    name: "Aula de Spinning",
     date: "2024-12-02",
     duration: 45,
     caloriesBurned: 400,
-    instructor: "Emma Davis",
+    instructor: "Ana Ferreira",
     type: "Spinning",
   },
 ];
@@ -186,59 +186,59 @@ export const mockWorkouts: Workout[] = [
 export const mockAchievements: Achievement[] = [
   {
     id: "1",
-    title: "First Steps",
-    description: "Complete your first workout",
+    title: "Primeiros Passos",
+    description: "Completa o teu primeiro treino",
     icon: "award",
     unlockedAt: "2024-01-20",
     isUnlocked: true,
   },
   {
     id: "2",
-    title: "Week Warrior",
-    description: "Work out 7 days in a row",
+    title: "Guerreiro da Semana",
+    description: "Treina 7 dias seguidos",
     icon: "zap",
     unlockedAt: "2024-02-15",
     isUnlocked: true,
   },
   {
     id: "3",
-    title: "Calorie Crusher",
-    description: "Burn 5,000 calories total",
+    title: "Destruidor de Calorias",
+    description: "Queima 5.000 calorias no total",
     icon: "target",
     unlockedAt: "2024-03-10",
     isUnlocked: true,
   },
   {
     id: "4",
-    title: "Early Bird",
-    description: "Attend 10 morning classes",
+    title: "Madrugador",
+    description: "Participa em 10 aulas matinais",
     icon: "sunrise",
     isUnlocked: false,
   },
   {
     id: "5",
-    title: "Class Master",
-    description: "Try all class categories",
+    title: "Mestre das Aulas",
+    description: "Experimenta todas as categorias de aulas",
     icon: "star",
     isUnlocked: false,
   },
   {
     id: "6",
-    title: "Century Club",
-    description: "Complete 100 workouts",
+    title: "Clube dos 100",
+    description: "Completa 100 treinos",
     icon: "trophy",
     isUnlocked: false,
   },
 ];
 
 export const mockWeeklyStats: WeeklyStats[] = [
-  { day: "Mon", workouts: 1, calories: 320 },
-  { day: "Tue", workouts: 2, calories: 580 },
-  { day: "Wed", workouts: 1, calories: 450 },
-  { day: "Thu", workouts: 0, calories: 0 },
-  { day: "Fri", workouts: 2, calories: 620 },
-  { day: "Sat", workouts: 1, calories: 380 },
-  { day: "Sun", workouts: 0, calories: 0 },
+  { day: "Seg", workouts: 1, calories: 320 },
+  { day: "Ter", workouts: 2, calories: 580 },
+  { day: "Qua", workouts: 1, calories: 450 },
+  { day: "Qui", workouts: 0, calories: 0 },
+  { day: "Sex", workouts: 2, calories: 620 },
+  { day: "Sáb", workouts: 1, calories: 380 },
+  { day: "Dom", workouts: 0, calories: 0 },
 ];
 
 export const memberStats = {
@@ -248,13 +248,13 @@ export const memberStats = {
   personalRecords: 8,
 };
 
-export const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+export const weekDays = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
 export const classCategories = [
-  { key: "all", label: "All" },
+  { key: "all", label: "Todas" },
   { key: "yoga", label: "Yoga" },
   { key: "hiit", label: "HIIT" },
-  { key: "strength", label: "Strength" },
+  { key: "strength", label: "Força" },
   { key: "cardio", label: "Cardio" },
   { key: "spinning", label: "Spinning" },
   { key: "pilates", label: "Pilates" },

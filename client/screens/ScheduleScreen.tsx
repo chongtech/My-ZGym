@@ -67,7 +67,7 @@ export default function ScheduleScreen() {
             type="small"
             style={{ color: getDifficultyColor(item.difficulty), fontWeight: "600" }}
           >
-            {item.difficulty.charAt(0).toUpperCase() + item.difficulty.slice(1)}
+            {item.difficulty === "beginner" ? "Iniciante" : item.difficulty === "intermediate" ? "Intermédio" : "Avançado"}
           </ThemedText>
         </View>
       </View>
@@ -88,14 +88,14 @@ export default function ScheduleScreen() {
         <View style={styles.spotsInfo}>
           <Feather name="users" size={14} color={theme.textSecondary} />
           <ThemedText type="small" style={{ color: theme.textSecondary }}>
-            {item.spotsAvailable}/{item.totalSpots} spots
+            {item.spotsAvailable}/{item.totalSpots} lugares
           </ThemedText>
         </View>
         {item.isBooked ? (
           <View style={[styles.bookedButton, { backgroundColor: `${BrandColors.success}15` }]}>
             <Feather name="check" size={16} color={BrandColors.success} />
             <ThemedText type="button" style={{ color: BrandColors.success }}>
-              Booked
+              Reservado
             </ThemedText>
           </View>
         ) : item.spotsAvailable > 0 ? (
@@ -107,13 +107,13 @@ export default function ScheduleScreen() {
             onPress={() => handleBookClass(item)}
           >
             <ThemedText type="button" style={{ color: "#FFFFFF" }}>
-              Book
+              Reservar
             </ThemedText>
           </Pressable>
         ) : (
           <View style={[styles.fullButton, { backgroundColor: theme.backgroundSecondary }]}>
             <ThemedText type="button" style={{ color: theme.textSecondary }}>
-              Full
+              Cheio
             </ThemedText>
           </View>
         )}
@@ -215,10 +215,10 @@ export default function ScheduleScreen() {
         <View style={styles.emptyState}>
           <Feather name="calendar" size={48} color={theme.textSecondary} />
           <ThemedText type="h4" style={[styles.emptyTitle, { color: theme.textSecondary }]}>
-            No classes scheduled
+            Sem aulas agendadas
           </ThemedText>
           <ThemedText type="body" style={{ color: theme.textSecondary, textAlign: "center" }}>
-            Try selecting a different day or category
+            Tenta selecionar um dia ou categoria diferente
           </ThemedText>
         </View>
       )}

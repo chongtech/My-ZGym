@@ -120,11 +120,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const mockUser = mockUsers[normalizedEmail];
 
     if (!mockUser) {
-      return { success: false, error: "User not found" };
+      return { success: false, error: "Utilizador não encontrado" };
     }
 
     if (mockUser.password !== password) {
-      return { success: false, error: "Incorrect password" };
+      return { success: false, error: "Palavra-passe incorreta" };
     }
 
     setUser(mockUser.user);

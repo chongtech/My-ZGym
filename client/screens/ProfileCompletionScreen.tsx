@@ -20,12 +20,12 @@ import { Spacing, BorderRadius, BrandColors } from "@/constants/theme";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
 
 const fitnessGoals = [
-  "Lose Weight",
-  "Build Muscle",
-  "Improve Endurance",
-  "Flexibility",
-  "General Fitness",
-  "Stress Relief",
+  "Perder Peso",
+  "Ganhar Músculo",
+  "Melhorar Resistência",
+  "Flexibilidade",
+  "Fitness Geral",
+  "Alívio de Stress",
 ];
 
 export default function ProfileCompletionScreen() {
@@ -54,7 +54,7 @@ export default function ProfileCompletionScreen() {
 
   const handleSubmit = async () => {
     if (!isFormValid) {
-      setError("Please fill in all required fields");
+      setError("Por favor, preenche todos os campos obrigatórios");
       return;
     }
 
@@ -69,7 +69,7 @@ export default function ProfileCompletionScreen() {
         emergencyContactPhone: emergencyContactPhone.trim(),
       });
     } catch (err) {
-      setError("Failed to save profile");
+      setError("Falha ao guardar o perfil");
     } finally {
       setIsLoading(false);
     }
@@ -79,10 +79,10 @@ export default function ProfileCompletionScreen() {
     <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
       <View style={[styles.header, { paddingTop: insets.top + Spacing.lg }]}>
         <ThemedText type="h2" style={styles.headerTitle}>
-          Complete Your Profile
+          Completa o Teu Perfil
         </ThemedText>
         <ThemedText type="body" style={[styles.headerSubtitle, { color: theme.textSecondary }]}>
-          We need a few more details to get you started
+          Precisamos de mais alguns detalhes para começar
         </ThemedText>
       </View>
 
@@ -100,7 +100,7 @@ export default function ProfileCompletionScreen() {
           </View>
           <Pressable style={styles.avatarButton}>
             <ThemedText type="link" style={{ color: BrandColors.primary }}>
-              Add Photo
+              Adicionar Foto
             </ThemedText>
           </Pressable>
         </View>
@@ -117,13 +117,13 @@ export default function ProfileCompletionScreen() {
         <View style={styles.form}>
           <View style={styles.inputContainer}>
             <ThemedText type="small" style={styles.label}>
-              Full Name <ThemedText style={{ color: BrandColors.error }}>*</ThemedText>
+              Nome Completo <ThemedText style={{ color: BrandColors.error }}>*</ThemedText>
             </ThemedText>
             <View style={[styles.inputWrapper, { borderColor: theme.border }]}>
               <Feather name="user" size={18} color={theme.textSecondary} style={styles.inputIcon} />
               <TextInput
                 style={[styles.input, { color: theme.text }]}
-                placeholder="Enter your full name"
+                placeholder="Introduz o teu nome completo"
                 placeholderTextColor={theme.textSecondary}
                 value={fullName}
                 onChangeText={setFullName}
@@ -134,13 +134,13 @@ export default function ProfileCompletionScreen() {
 
           <View style={styles.inputContainer}>
             <ThemedText type="small" style={styles.label}>
-              Phone Number <ThemedText style={{ color: BrandColors.error }}>*</ThemedText>
+              Número de Telefone <ThemedText style={{ color: BrandColors.error }}>*</ThemedText>
             </ThemedText>
             <View style={[styles.inputWrapper, { borderColor: theme.border }]}>
               <Feather name="phone" size={18} color={theme.textSecondary} style={styles.inputIcon} />
               <TextInput
                 style={[styles.input, { color: theme.text }]}
-                placeholder="Enter your phone number"
+                placeholder="Introduz o teu número de telefone"
                 placeholderTextColor={theme.textSecondary}
                 value={phone}
                 onChangeText={setPhone}
@@ -152,19 +152,19 @@ export default function ProfileCompletionScreen() {
           <View style={styles.sectionHeader}>
             <Feather name="alert-triangle" size={16} color={BrandColors.warning} />
             <ThemedText type="h4" style={styles.sectionTitle}>
-              Emergency Contact
+              Contacto de Emergência
             </ThemedText>
           </View>
 
           <View style={styles.inputContainer}>
             <ThemedText type="small" style={styles.label}>
-              Contact Name <ThemedText style={{ color: BrandColors.error }}>*</ThemedText>
+              Nome do Contacto <ThemedText style={{ color: BrandColors.error }}>*</ThemedText>
             </ThemedText>
             <View style={[styles.inputWrapper, { borderColor: theme.border }]}>
               <Feather name="user" size={18} color={theme.textSecondary} style={styles.inputIcon} />
               <TextInput
                 style={[styles.input, { color: theme.text }]}
-                placeholder="Emergency contact name"
+                placeholder="Nome do contacto de emergência"
                 placeholderTextColor={theme.textSecondary}
                 value={emergencyContactName}
                 onChangeText={setEmergencyContactName}
@@ -175,13 +175,13 @@ export default function ProfileCompletionScreen() {
 
           <View style={styles.inputContainer}>
             <ThemedText type="small" style={styles.label}>
-              Contact Phone <ThemedText style={{ color: BrandColors.error }}>*</ThemedText>
+              Telefone do Contacto <ThemedText style={{ color: BrandColors.error }}>*</ThemedText>
             </ThemedText>
             <View style={[styles.inputWrapper, { borderColor: theme.border }]}>
               <Feather name="phone" size={18} color={theme.textSecondary} style={styles.inputIcon} />
               <TextInput
                 style={[styles.input, { color: theme.text }]}
-                placeholder="Emergency contact phone"
+                placeholder="Telefone do contacto de emergência"
                 placeholderTextColor={theme.textSecondary}
                 value={emergencyContactPhone}
                 onChangeText={setEmergencyContactPhone}
@@ -193,7 +193,7 @@ export default function ProfileCompletionScreen() {
           <View style={styles.sectionHeader}>
             <Feather name="target" size={16} color={BrandColors.accent} />
             <ThemedText type="h4" style={styles.sectionTitle}>
-              Fitness Goals (Optional)
+              Objetivos Fitness (Opcional)
             </ThemedText>
           </View>
 
@@ -236,7 +236,7 @@ export default function ProfileCompletionScreen() {
           {isLoading ? (
             <ActivityIndicator color="#FFFFFF" size="small" />
           ) : (
-            "Complete Profile"
+            "Completar Perfil"
           )}
         </Button>
       </KeyboardAwareScrollViewCompat>

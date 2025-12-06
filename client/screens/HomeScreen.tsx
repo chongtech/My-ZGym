@@ -13,9 +13,9 @@ import { Spacing, BorderRadius, BrandColors } from "@/constants/theme";
 import { mockClasses, mockWorkouts } from "@/data/mockData";
 
 const quickActions = [
-  { id: "book", icon: "calendar", label: "Book Class" },
-  { id: "schedule", icon: "clock", label: "Schedule" },
-  { id: "workout", icon: "activity", label: "Workout" },
+  { id: "book", icon: "calendar", label: "Reservar Aula" },
+  { id: "schedule", icon: "clock", label: "Horário" },
+  { id: "workout", icon: "activity", label: "Treino" },
 ];
 
 const getTierColor = (tier: string) => {
@@ -43,7 +43,7 @@ export default function HomeScreen() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    return date.toLocaleDateString("pt-PT", { month: "short", day: "numeric" });
   };
 
   return (
@@ -61,10 +61,10 @@ export default function HomeScreen() {
         <View style={styles.greetingRow}>
           <View style={styles.greetingText}>
             <ThemedText type="body" style={{ color: theme.textSecondary }}>
-              Welcome back,
+              Bem-vindo de volta,
             </ThemedText>
             <ThemedText type="h2">
-              {user?.fullName || "Member"}
+              {user?.fullName || "Membro"}
             </ThemedText>
           </View>
           <View style={[styles.avatar, { backgroundColor: theme.backgroundDefault }]}>
@@ -77,7 +77,7 @@ export default function HomeScreen() {
         <View style={styles.membershipHeader}>
           <View>
             <ThemedText type="small" style={{ color: theme.textSecondary }}>
-              Member ID
+              ID de Membro
             </ThemedText>
             <ThemedText type="h4">
               ZG-{user?.id?.padStart(6, "0") || "000001"}
@@ -92,14 +92,14 @@ export default function HomeScreen() {
         <View style={styles.membershipFooter}>
           <Feather name="calendar" size={14} color={theme.textSecondary} />
           <ThemedText type="small" style={{ color: theme.textSecondary }}>
-            Valid until {user?.membershipExpiry || "N/A"}
+            Válido até {user?.membershipExpiry || "N/A"}
           </ThemedText>
         </View>
       </Card>
 
       <View style={styles.section}>
         <ThemedText type="h4" style={styles.sectionTitle}>
-          Quick Actions
+          Ações Rápidas
         </ThemedText>
         <View style={styles.quickActionsRow}>
           {quickActions.map((action) => (
@@ -123,10 +123,10 @@ export default function HomeScreen() {
 
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <ThemedText type="h4">Today's Classes</ThemedText>
+          <ThemedText type="h4">Aulas de Hoje</ThemedText>
           <Pressable style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
             <ThemedText type="link" style={{ color: BrandColors.primary }}>
-              See all
+              Ver todas
             </ThemedText>
           </Pressable>
         </View>
@@ -161,13 +161,13 @@ export default function HomeScreen() {
               {gymClass.isBooked ? (
                 <View style={[styles.bookedBadge, { backgroundColor: `${BrandColors.success}15` }]}>
                   <ThemedText type="small" style={{ color: BrandColors.success, fontWeight: "600" }}>
-                    Booked
+                    Reservado
                   </ThemedText>
                 </View>
               ) : (
                 <View style={styles.spotsContainer}>
                   <ThemedText type="small" style={{ color: theme.textSecondary }}>
-                    {gymClass.spotsAvailable} spots
+                    {gymClass.spotsAvailable} lugares
                   </ThemedText>
                 </View>
               )}
@@ -178,10 +178,10 @@ export default function HomeScreen() {
 
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <ThemedText type="h4">Recent Activity</ThemedText>
+          <ThemedText type="h4">Atividade Recente</ThemedText>
           <Pressable style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
             <ThemedText type="link" style={{ color: BrandColors.primary }}>
-              See all
+              Ver tudo
             </ThemedText>
           </Pressable>
         </View>

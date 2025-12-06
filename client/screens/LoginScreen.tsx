@@ -66,7 +66,7 @@ export default function LoginScreen() {
     setError("");
 
     if (!email || !password) {
-      setError("Please fill in all fields");
+      setError("Por favor preenche todos os campos");
       return;
     }
 
@@ -77,14 +77,14 @@ export default function LoginScreen() {
         setError(result.error || "Login failed");
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      setError("Ocorreu um erro inesperado");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSocialLogin = (provider: string) => {
-    setError(`${provider} login coming soon`);
+    setError(`Login com ${provider} em breve`);
   };
 
   return (
@@ -115,10 +115,10 @@ export default function LoginScreen() {
 
         <View style={styles.headerContainer}>
           <ThemedText type="h1" style={styles.welcomeText}>
-            Welcome
+            Bem-vindo
           </ThemedText>
           <ThemedText type="body" style={styles.subtitle}>
-            Login to access your training plan
+            Entra para aceder ao teu plano de treino
           </ThemedText>
         </View>
 
@@ -147,7 +147,7 @@ export default function LoginScreen() {
           <View style={styles.inputWrapper}>
             <TextInput
               style={styles.input}
-              placeholder="Password"
+              placeholder="Palavra-passe"
               placeholderTextColor="rgba(255,255,255,0.5)"
               value={password}
               onChangeText={setPassword}
@@ -164,7 +164,7 @@ export default function LoginScreen() {
 
           <Pressable style={styles.forgotPassword}>
             <ThemedText type="small" style={styles.forgotPasswordText}>
-              Forgot your password?
+              Esqueceste-te da palavra-passe?
             </ThemedText>
           </Pressable>
 
@@ -177,7 +177,7 @@ export default function LoginScreen() {
               <ActivityIndicator color="#000000" size="small" />
             ) : (
               <ThemedText type="button" style={styles.loginButtonText}>
-                Login
+                Entrar
               </ThemedText>
             )}
           </Pressable>
@@ -186,7 +186,7 @@ export default function LoginScreen() {
         <View style={styles.dividerContainer}>
           <View style={styles.divider} />
           <ThemedText type="small" style={styles.dividerText}>
-            OR CONTINUE WITH
+            OU CONTINUA COM
           </ThemedText>
           <View style={styles.divider} />
         </View>
@@ -213,11 +213,11 @@ export default function LoginScreen() {
 
         <View style={styles.registerContainer}>
           <ThemedText type="body" style={styles.registerText}>
-            Don't have an account?{" "}
+            Não tens conta?{" "}
           </ThemedText>
           <Pressable>
             <ThemedText type="body" style={styles.registerLink}>
-              Register
+              Registar
             </ThemedText>
           </Pressable>
         </View>

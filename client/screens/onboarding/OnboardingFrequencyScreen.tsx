@@ -53,7 +53,7 @@ export default function OnboardingFrequencyScreen() {
                     <View style={[styles.progressBar, { width: '90%', backgroundColor: BrandColors.primary }]} />
                 </View>
                 <TouchableOpacity onPress={skipOnboarding} style={{ padding: 8 }}>
-                    <ThemedText style={{ fontSize: 14, fontWeight: '600' }}>Pular</ThemedText>
+                    <ThemedText style={{ fontSize: 14, fontWeight: '600' }}>Saltar</ThemedText>
                 </TouchableOpacity>
             </View>
 

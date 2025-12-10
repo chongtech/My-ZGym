@@ -12,6 +12,7 @@ import { Button } from "@/components/Button";
 import { useTheme } from "@/hooks/useTheme";
 import { BrandColors, Spacing, BorderRadius } from "@/constants/theme";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
+import { useAuth } from "@/context/AuthContext";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = (width - Spacing.xl * 2 - Spacing.md) / 2;
@@ -20,6 +21,7 @@ export default function OnboardingStep2Screen() {
     const insets = useSafeAreaInsets();
     const { theme } = useTheme();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const { skipOnboarding } = useAuth();
 
     const [selectedSex, setSelectedSex] = useState<'male' | 'female' | null>(null);
 
@@ -33,6 +35,10 @@ export default function OnboardingStep2Screen() {
         navigation.goBack();
     };
 
+    const handleSkip = () => {
+        skipOnboarding();
+    };
+
     return (
         <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
             <View style={[styles.header, { paddingTop: insets.top }]}>
@@ -44,7 +50,9 @@ export default function OnboardingStep2Screen() {
                 <View style={[styles.progressContainer, { backgroundColor: theme.border }]}>
                     <View style={[styles.progressBar, { width: '40%', backgroundColor: BrandColors.primary }]} />
                 </View>
-                <View style={{ width: 40 }} />
+                <TouchableOpacity onPress={handleSkip} style={{ padding: 8 }}>
+                    <ThemedText style={{ fontSize: 14, fontWeight: '600' }}>Saltar</ThemedText>
+                </TouchableOpacity>
             </View>
 
             <ScrollView

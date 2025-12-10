@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { View, StyleSheet, TouchableOpacity, Dimensions, FlatList, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
-import { Image } from "expo-image";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -13,35 +13,35 @@ import { Button } from "@/components/Button";
 import { useTheme } from "@/hooks/useTheme";
 import { BrandColors, Spacing, BorderRadius } from "@/constants/theme";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
+import { useAuth } from "@/context/AuthContext";
 
-const { width } = Dimensions.get("window");
-const ITEM_HEIGHT = 60; // Height of each ruler item relative to scroll
-const VISIBLE_ITEMS = 5; // How many items roughly visible
-const RULER_HEIGHT = 400; // Total height of the ruler container
-
-// Generate range of numbers for the ruler
-// List order: Top to Bottom.
-// If we want 180 at top and 170 below, we list descending: 220, 219... 140.
-const minHeight = 140;
-const maxHeight = 220;
-const range = Array.from({ length: maxHeight - minHeight + 1 }, (_, i) => maxHeight - i);
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const ITEM_HEIGHT = 8; // Height of each cm tick
+const MIN_HEIGHT_CM = 130; // cm
+const MAX_HEIGHT_CM = 220; // cm
 
 export default function OnboardingHeightScreen() {
     const insets = useSafeAreaInsets();
     const { theme } = useTheme();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'OnboardingHeight'>>();
+    const { skipOnboarding } = useAuth();
 
-    // Default to male if not provided
     const sex = route.params?.sex || 'male';
 
-    const [heightCm, setHeightCm] = useState(175);
+    const [heightCm, setHeightCm] = useState(170);
     const [isCm, setIsCm] = useState(true);
 
     const flatListRef = useRef<FlatList>(null);
 
+    // Generate ruler data: 130, 131, ... 220
+    const rulerData = useMemo(() => {
+        const count = MAX_HEIGHT_CM - MIN_HEIGHT_CM + 1;
+        return Array.from({ length: count }, (_, i) => MIN_HEIGHT_CM + i);
+    }, []);
+
     const handleNext = () => {
-        // Pass height and sex to the next step (Weight)
+        // Navigate to Weight screen
         navigation.navigate("OnboardingWeight", { sex, height: heightCm });
     };
 
@@ -49,37 +49,43 @@ export default function OnboardingHeightScreen() {
         navigation.goBack();
     };
 
-    const imageSource = sex === 'male'
-        ? require("../../../assets/images/onboarding/man_height.png")
-        : require("../../../assets/images/onboarding/woman_height.png");
+    const handleSkip = () => {
+        skipOnboarding();
+    };
+
+    // Convert cm to feet and inches
+    const cmToFeetInches = (cm: number) => {
+        const totalInches = cm / 2.54;
+        const feet = Math.floor(totalInches / 12);
+        const inches = Math.round(totalInches % 12);
+        return { feet, inches };
+    };
 
     // Initial scroll positioning
     useEffect(() => {
-        // Find index of 175
-        const initialIndex = range.findIndex(val => val === 175);
-        if (initialIndex !== -1) {
-            setTimeout(() => {
-                flatListRef.current?.scrollToOffset({
-                    offset: initialIndex * ITEM_HEIGHT,
-                    animated: false
-                });
-            }, 100);
-        }
+        const initialIndex = 170 - MIN_HEIGHT_CM;
+
+        setTimeout(() => {
+            flatListRef.current?.scrollToOffset({
+                offset: initialIndex * ITEM_HEIGHT,
+                animated: false
+            });
+        }, 100);
     }, []);
 
     const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const offsetY = event.nativeEvent.contentOffset.y;
-        // Snap logic: Index = round(offset / itemHeight)
         const index = Math.round(offsetY / ITEM_HEIGHT);
 
-        // Ensure index is within bounds
-        if (index >= 0 && index < range.length) {
-            const newValue = range[index];
-            if (newValue && newValue !== heightCm) {
-                setHeightCm(newValue);
-            }
+        if (index >= 0 && index < rulerData.length) {
+            setHeightCm(rulerData[index]);
         }
     };
+
+    // Select the appropriate image based on sex
+    const bodyImageUrl = sex === 'male'
+        ? 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&h=600&fit=crop&crop=faces'
+        : 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=600&fit=crop&crop=faces';
 
     return (
         <View style={[styles.container, { backgroundColor: theme.backgroundRoot }]}>
@@ -89,122 +95,136 @@ export default function OnboardingHeightScreen() {
                 </TouchableOpacity>
 
                 <View style={[styles.progressContainer, { backgroundColor: theme.border }]}>
-                    <View style={[styles.progressBar, { width: '55%', backgroundColor: BrandColors.primary }]} />
+                    <View style={[styles.progressBar, { width: '50%', backgroundColor: BrandColors.primary }]} />
                 </View>
-                <View style={{ width: 40 }} />
+                <TouchableOpacity onPress={handleSkip} style={{ padding: 8 }}>
+                    <ThemedText style={{ fontSize: 14, fontWeight: '600' }}>Saltar</ThemedText>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.content}>
                 <Animated.View entering={FadeInDown.duration(600).delay(100)} style={{ alignItems: 'center' }}>
                     <ThemedText type="h2" style={styles.title}>
-                        Qual é sua altura?
+                        Sua altura
+                    </ThemedText>
+                    <ThemedText style={[styles.subtitle, { color: theme.textSecondary }]}>
+                        As informações de altura nos ajudam a calcular seu IMC com mais precisão.
                     </ThemedText>
 
                     {/* Unit Toggle */}
                     <View style={[styles.toggleContainer, { backgroundColor: theme.backgroundDefault }]}>
                         <TouchableOpacity
-                            style={[styles.toggleButton, isCm && styles.toggleButtonActive]}
-                            onPress={() => setIsCm(true)}
-                        >
-                            <ThemedText style={[styles.toggleText, isCm && styles.toggleTextActive]}>cm</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity
                             style={[styles.toggleButton, !isCm && styles.toggleButtonActive]}
                             onPress={() => setIsCm(false)}
                         >
-                            <ThemedText style={[styles.toggleText, !isCm && styles.toggleTextActive]}>ft</ThemedText>
+                            <ThemedText style={[styles.toggleText, !isCm && styles.toggleTextActive]}>FT</ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.toggleButton, isCm && styles.toggleButtonActive]}
+                            onPress={() => setIsCm(true)}
+                        >
+                            <ThemedText style={[styles.toggleText, isCm && styles.toggleTextActive]}>CM</ThemedText>
                         </TouchableOpacity>
                     </View>
                 </Animated.View>
 
                 {/* Main Measurement Content */}
                 <View style={styles.measurementArea}>
+                    {/* Horizontal Layout: Ruler + Body Image */}
+                    <View style={styles.horizontalContainer}>
+                        {/* Vertical Ruler */}
+                        <View style={styles.rulerWrapper}>
+                            {/* Blue Indicator Line */}
+                            <View style={styles.centerIndicator} pointerEvents="none" />
 
-                    {/* Human Image */}
-                    <View style={styles.personContainer}>
-                        <Image
-                            source={imageSource}
-                            style={styles.personImage}
-                            contentFit="contain"
-                        />
-                    </View>
+                            <FlatList
+                                ref={flatListRef}
+                                data={rulerData}
+                                keyExtractor={(item) => item.toString()}
+                                showsVerticalScrollIndicator={false}
+                                snapToInterval={ITEM_HEIGHT}
+                                decelerationRate="fast"
+                                onScroll={onScroll}
+                                scrollEventThrottle={16}
+                                contentContainerStyle={{
+                                    paddingVertical: SCREEN_HEIGHT / 2 - 150 - ITEM_HEIGHT / 2
+                                }}
+                                getItemLayout={(_data, index) => (
+                                    { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
+                                )}
+                                renderItem={({ item }) => {
+                                    const isMultipleOfTen = item % 10 === 0;
+                                    return (
+                                        <View style={[styles.rulerItem, { height: ITEM_HEIGHT }]}>
+                                            <View style={[
+                                                styles.rulerTick,
+                                                {
+                                                    width: isMultipleOfTen ? 40 : 20,
+                                                    backgroundColor: isMultipleOfTen ? theme.text : theme.border
+                                                }
+                                            ]} />
+                                            {isMultipleOfTen && (
+                                                <ThemedText style={styles.rulerLabel}>
+                                                    {item}
+                                                </ThemedText>
+                                            )}
+                                        </View>
+                                    );
+                                }}
+                            />
 
-                    {/* Left side overlay: Value and Line */}
-                    <View style={styles.indicatorContainer} pointerEvents="none">
-                        <View style={styles.indicatorRow}>
-                            <View style={styles.heightTextGroup}>
-                                <ThemedText style={styles.indicatorValue}>{heightCm}</ThemedText>
-                                <ThemedText style={styles.indicatorUnit}>cm</ThemedText>
-                            </View>
-                            <View style={styles.indicatorLine} />
+                            {/* Top/Bottom Fades */}
+                            <LinearGradient
+                                colors={[theme.backgroundRoot, 'transparent']}
+                                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                                style={[styles.verticalFade, { top: 0 }]}
+                                pointerEvents="none"
+                            />
+                            <LinearGradient
+                                colors={['transparent', theme.backgroundRoot]}
+                                start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+                                style={[styles.verticalFade, { bottom: 0 }]}
+                                pointerEvents="none"
+                            />
                         </View>
-                    </View>
 
-                    {/* Right side: Ruler */}
-                    <View style={styles.rulerContainer}>
-                        {/* Top Fade */}
-                        <LinearGradient
-                            colors={[theme.backgroundRoot, 'transparent']}
-                            style={styles.fadeOverlayTop}
-                            pointerEvents="none"
-                        />
+                        {/* Body Image and Height Display */}
+                        <View style={styles.imageContainer}>
+                            <View style={styles.heightDisplayContainer}>
+                                <ThemedText style={styles.heightValue}>
+                                    {isCm ? (
+                                        <>
+                                            {heightCm}
+                                            <ThemedText style={styles.heightUnit}> cm</ThemedText>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {cmToFeetInches(heightCm).feet}'{cmToFeetInches(heightCm).inches}"
+                                        </>
+                                    )}
+                                </ThemedText>
+                            </View>
 
-                        <FlatList
-                            ref={flatListRef}
-                            data={range}
-                            keyExtractor={(item) => item.toString()}
-                            renderItem={({ item }) => (
-                                <View style={[styles.rulerItem, { height: ITEM_HEIGHT }]}>
-                                    <View style={styles.rulerTickGroup}>
-                                        {/* Number */}
-                                        <ThemedText style={[
-                                            styles.rulerText,
-                                            {
-                                                color: item === heightCm ? theme.text : theme.textSecondary,
-                                                fontWeight: item === heightCm ? '700' : '400',
-                                                opacity: item === heightCm ? 1 : 0.5
-                                            }
-                                        ]}>
-                                            {item}
-                                        </ThemedText>
+                            {/* Height Indicator Line */}
+                            <View style={styles.heightLineContainer}>
+                                <View style={styles.heightLine} />
+                                <ThemedText style={styles.heightLineLabel}>{heightCm}</ThemedText>
+                            </View>
 
-                                        {/* Tick */}
-                                        <View style={[
-                                            styles.rulerTick,
-                                            {
-                                                backgroundColor: item === heightCm ? theme.text : theme.border,
-                                                width: item === heightCm ? 30 : 20
-                                            }
-                                        ]} />
-                                    </View>
-                                </View>
-                            )}
-                            showsVerticalScrollIndicator={false}
-                            snapToInterval={ITEM_HEIGHT}
-                            decelerationRate="fast"
-                            onScroll={onScroll}
-                            scrollEventThrottle={16}
-                            contentContainerStyle={{
-                                paddingVertical: (RULER_HEIGHT - ITEM_HEIGHT) / 2
-                            }}
-                            getItemLayout={(data, index) => (
-                                { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
-                            )}
-                        />
-
-                        {/* Bottom Fade */}
-                        <LinearGradient
-                            colors={['transparent', theme.backgroundRoot]}
-                            style={styles.fadeOverlayBottom}
-                            pointerEvents="none"
-                        />
+                            {/* Body Silhouette */}
+                            <Image
+                                source={bodyImageUrl}
+                                style={styles.bodyImage}
+                                contentFit="contain"
+                            />
+                        </View>
                     </View>
                 </View>
             </View>
 
             <View style={[styles.footer, { paddingBottom: insets.bottom + Spacing.md }]}>
                 <Button onPress={handleNext} style={{ width: "100%" }}>
-                    Próximo
+                    CONTINUAR
                 </Button>
             </View>
         </View>
@@ -221,6 +241,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: Spacing.md,
         height: 60,
+        marginTop: 10,
     },
     backButton: {
         padding: Spacing.sm,
@@ -242,21 +263,29 @@ const styles = StyleSheet.create({
     },
     title: {
         textAlign: 'center',
+        marginBottom: Spacing.sm,
+    },
+    subtitle: {
+        textAlign: 'center',
+        fontSize: 14,
         marginBottom: Spacing.lg,
+        paddingHorizontal: Spacing.xl,
     },
     toggleContainer: {
         flexDirection: 'row',
         borderRadius: BorderRadius.full,
         padding: 4,
-        marginBottom: Spacing.md,
+        marginBottom: Spacing.xl,
     },
     toggleButton: {
-        paddingHorizontal: Spacing.lg,
+        paddingHorizontal: Spacing.xl,
         paddingVertical: Spacing.xs,
         borderRadius: BorderRadius.full,
+        minWidth: 60,
+        alignItems: 'center',
     },
     toggleButtonActive: {
-        backgroundColor: '#4C6EF5',
+        backgroundColor: BrandColors.primary,
     },
     toggleText: {
         fontSize: 14,
@@ -264,112 +293,98 @@ const styles = StyleSheet.create({
         color: '#888',
     },
     toggleTextActive: {
-        color: '#FFF',
+        color: '#000',
     },
     measurementArea: {
         flex: 1,
-        flexDirection: 'row',
-        position: 'relative',
         alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 20,
     },
-    personContainer: {
-        position: 'absolute',
-        bottom: 0,
-        left: width * 0.05,
-        width: width * 0.5,
-        height: '80%',
-        justifyContent: 'flex-end',
-        zIndex: 0,
-    },
-    personImage: {
+    horizontalContainer: {
+        flexDirection: 'row',
+        flex: 1,
         width: '100%',
-        height: '100%',
+        paddingHorizontal: Spacing.md,
     },
-    rulerContainer: {
-        position: 'absolute',
-        right: 0,
-        width: 120, // ample width for text + ticks
-        height: RULER_HEIGHT,
-        zIndex: 1,
+    rulerWrapper: {
+        width: 80,
+        height: '100%',
+        position: 'relative',
     },
     rulerItem: {
-        justifyContent: 'center',
-        alignItems: 'flex-end',
-        paddingRight: 20,
-        width: '100%',
-    },
-    rulerTickGroup: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-end',
-    },
-    rulerText: {
-        fontSize: 16,
-        marginRight: 10,
-        textAlign: 'right',
+        paddingRight: 10,
     },
     rulerTick: {
         height: 2,
         borderRadius: 1,
     },
-    fadeOverlayTop: {
+    rulerLabel: {
+        marginLeft: 10,
+        fontSize: 12,
+        color: '#888',
+    },
+    centerIndicator: {
         position: 'absolute',
-        top: 0,
         left: 0,
-        right: 0,
-        height: 80,
+        top: '50%',
+        marginTop: -75,
+        width: 60,
+        height: 3,
+        backgroundColor: BrandColors.primary,
         zIndex: 10,
     },
-    fadeOverlayBottom: {
+    verticalFade: {
         position: 'absolute',
-        bottom: 0,
         left: 0,
         right: 0,
-        height: 80,
-        zIndex: 10,
+        height: 100,
+        zIndex: 5,
     },
-    indicatorContainer: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
+    imageContainer: {
+        flex: 1,
+        alignItems: 'center',
         justifyContent: 'center',
-        alignItems: 'flex-end',
-        zIndex: 20,
-        paddingRight: 50, // Enough to stop before hitting the ruler labels
+        position: 'relative',
     },
-    indicatorRow: {
+    heightDisplayContainer: {
+        position: 'absolute',
+        top: 20,
+        alignItems: 'center',
+    },
+    heightValue: {
+        fontSize: 64,
+        fontWeight: '800',
+    },
+    heightUnit: {
+        fontSize: 24,
+        fontWeight: '500',
+        color: '#666',
+    },
+    heightLineContainer: {
+        position: 'absolute',
+        right: 20,
+        top: '50%',
+        marginTop: -75,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-end',
-        // We want the line to extend TOWARDS the ruler.
-        // The container is fast-forwarded to right side.
-        marginRight: -10, // Adjust overlap with ruler
+        zIndex: 10,
     },
-    heightTextGroup: {
-        flexDirection: 'row',
-        alignItems: 'baseline',
-        marginRight: 15,
+    heightLine: {
+        width: 60,
+        height: 3,
+        backgroundColor: BrandColors.primary,
     },
-    indicatorValue: {
-        fontSize: 42,
-        fontWeight: '800',
-        color: '#000', // Should be theme text normally, but screenshot is stark black
-        // If theme is dark mode, this should probably be white
-    },
-    indicatorUnit: {
+    heightLineLabel: {
+        marginLeft: 8,
         fontSize: 16,
-        fontWeight: '600',
-        color: '#666',
-        marginLeft: 4,
+        fontWeight: '700',
+        color: '#888',
     },
-    indicatorLine: {
-        width: 40,
-        height: 2,
-        backgroundColor: '#4C6EF5', // Match active
+    bodyImage: {
+        width: 200,
+        height: 400,
+        opacity: 0.9,
     },
     footer: {
         paddingHorizontal: Spacing.xl,

@@ -12,6 +12,7 @@ import { Button } from "@/components/Button";
 import { useTheme } from "@/hooks/useTheme";
 import { BrandColors, Spacing, BorderRadius } from "@/constants/theme";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
+import { useAuth } from "@/context/AuthContext";
 
 const { width } = Dimensions.get("window");
 const ITEM_WIDTH = 10; // Width of each 0.1kg tick
@@ -24,6 +25,7 @@ export default function OnboardingWeightScreen() {
     const { theme } = useTheme();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'OnboardingWeight'>>();
+    const { skipOnboarding } = useAuth();
 
     // Fallback params to avoid crash if accessed directly (though typically passed from Height screen)
     const sex = route.params?.sex || 'male';
@@ -63,6 +65,10 @@ export default function OnboardingWeightScreen() {
 
     const handleBack = () => {
         navigation.goBack();
+    };
+
+    const handleSkip = () => {
+        skipOnboarding();
     };
 
     // Initial scroll positioning
@@ -106,7 +112,9 @@ export default function OnboardingWeightScreen() {
                 <View style={[styles.progressContainer, { backgroundColor: theme.border }]}>
                     <View style={[styles.progressBar, { width: '60%', backgroundColor: BrandColors.primary }]} />
                 </View>
-                <View style={{ width: 40 }} />
+                <TouchableOpacity onPress={handleSkip} style={{ padding: 8 }}>
+                    <ThemedText style={{ fontSize: 14, fontWeight: '600' }}>Saltar</ThemedText>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.content}>

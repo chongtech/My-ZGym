@@ -33,6 +33,8 @@ export default function OnboardingStep3Screen() {
 
     const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
 
+    const { skipOnboarding } = useAuth();
+
     const handleNext = () => {
         if (selectedGoal) {
             navigation.navigate("OnboardingStep4", { ...params, mainGoal: selectedGoal });
@@ -41,6 +43,10 @@ export default function OnboardingStep3Screen() {
 
     const handleBack = () => {
         navigation.goBack();
+    };
+
+    const handleSkip = () => {
+        skipOnboarding();
     };
 
     return (
@@ -54,7 +60,9 @@ export default function OnboardingStep3Screen() {
                 <View style={[styles.progressContainer, { backgroundColor: theme.border }]}>
                     <View style={[styles.progressBar, { width: '70%', backgroundColor: BrandColors.primary }]} />
                 </View>
-                <View style={{ width: 40 }} />
+                <TouchableOpacity onPress={handleSkip} style={{ padding: 8 }}>
+                    <ThemedText style={{ fontSize: 14, fontWeight: '600' }}>Saltar</ThemedText>
+                </TouchableOpacity>
             </View>
 
             <ScrollView

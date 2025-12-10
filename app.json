@@ -4,7 +4,7 @@
     "slug": "my-zgym",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/zgym-logo.png",
     "scheme": "myzgym",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -25,16 +25,16 @@
     },
     "web": {
       "output": "single",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/zgym-logo.png"
     },
     "plugins": [
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/zgym-logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#2C3E50",
+          "backgroundColor": "#1A1A1A",
           "dark": {
             "backgroundColor": "#1A1A1A"
           }

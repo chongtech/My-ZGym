@@ -5,7 +5,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MainTabNavigator from "@/navigation/MainTabNavigator";
 import LoginScreen from "@/screens/LoginScreen";
 import RegisterScreen from "@/screens/RegisterScreen";
-import ProfileCompletionScreen from "@/screens/ProfileCompletionScreen";
 import OnboardingStep1Screen from "@/screens/onboarding/OnboardingStep1Screen";
 import OnboardingStep2Screen from "@/screens/onboarding/OnboardingStep2Screen";
 import OnboardingHeightScreen from "@/screens/onboarding/OnboardingHeightScreen";
@@ -118,11 +117,6 @@ export default function RootStackNavigator() {
           <Stack.Screen
             name="OnboardingStep4"
             component={OnboardingStep4Screen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="ProfileCompletion"
-            component={ProfileCompletionScreen}
             options={{ headerShown: false }}
           />
         </>

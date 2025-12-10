@@ -27,7 +27,8 @@ interface AuthContextType {
   register: (userData: { firstName: string; lastName: string; email: string; phone: string }) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<void>;
-  completeProfile: (profileData: Partial<User>) => Promise<void>;
+  completeProfile: (profileData: any) => Promise<void>;
+  saveOnboardingProgress: (data: any) => Promise<void>;
   skipOnboarding: () => void;
 }
 
@@ -177,12 +178,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser));
   };
 
-  const completeProfile = async (profileData: Partial<User>) => {
+  const completeProfile = async (profileData: any) => {
     if (!user) return;
     const updatedUser = {
       ...user,
       ...profileData,
       isProfileComplete: true
+    };
+    setUser(updatedUser);
+    await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser));
+  };
+
+  const saveOnboardingProgress = async (data: any) => {
+    if (!user) return;
+    const updatedUser = {
+      ...user,
+      ...data
     };
     setUser(updatedUser);
     await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser));
@@ -200,6 +211,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout,
         updateProfile,
         completeProfile,
+        saveOnboardingProgress,
         skipOnboarding
       }}
     >

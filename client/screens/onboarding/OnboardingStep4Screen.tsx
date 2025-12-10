@@ -130,7 +130,7 @@ export default function OnboardingStep4Screen() {
                     <View style={[styles.progressBar, { width: '100%', backgroundColor: BrandColors.primary }]} />
                 </View>
                 <TouchableOpacity onPress={handleSkip} style={{ padding: 8 }}>
-                    <ThemedText style={{ fontSize: 14, fontWeight: '600' }}>Pular</ThemedText>
+                    <ThemedText style={{ fontSize: 14, fontWeight: '600' }}>Saltar</ThemedText>
                 </TouchableOpacity>
             </View>
 

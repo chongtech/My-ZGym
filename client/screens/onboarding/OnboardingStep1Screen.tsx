@@ -123,7 +123,7 @@ export default function OnboardingStep1Screen() {
         <View style={styles.container}>
             <View style={[styles.skipContainer, { top: insets.top + Spacing.sm }]}>
                 <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-                    <ThemedText style={styles.skipText}>Pular</ThemedText>
+                    <ThemedText style={styles.skipText}>Saltar</ThemedText>
                 </TouchableOpacity>
             </View>
 

@@ -66,7 +66,7 @@ export function Button({
   const getTextColor = () => {
     if (variant === "outline") return BrandColors.primary;
     if (variant === "secondary") return theme.text;
-    return "#FFFFFF";
+    return "#000000";
   };
 
   return (

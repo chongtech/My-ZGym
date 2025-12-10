@@ -75,7 +75,7 @@ export default function LoginScreen() {
       resizeMode="cover"
     >
       <View style={styles.overlay} />
-      
+
       <KeyboardAwareScrollViewCompat
         style={styles.scrollView}
         contentContainerStyle={[
@@ -205,7 +205,7 @@ export default function LoginScreen() {
 
         <View style={styles.registerContainer}>
           <ThemedText type="body" style={styles.registerText}>
-            Não tens conta?{" "}
+            Não tens conta?
           </ThemedText>
           <Pressable onPress={handleGoToRegister}>
             <ThemedText type="body" style={styles.registerLink}>

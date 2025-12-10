@@ -226,7 +226,7 @@ export const mockAchievements: Achievement[] = [
     id: "6",
     title: "Clube dos 100",
     description: "Completa 100 treinos",
-    icon: "trophy",
+    icon: "award",
     isUnlocked: false,
   },
 ];

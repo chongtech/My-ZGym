@@ -22,10 +22,13 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  hasSkippedOnboarding: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (userData: { firstName: string; lastName: string; email: string; phone: string }) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<void>;
   completeProfile: (profileData: Partial<User>) => Promise<void>;
+  skipOnboarding: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -96,44 +99,74 @@ const mockUsers: Record<string, { password: string; user: User }> = {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasSkippedOnboarding, setHasSkippedOnboarding] = useState(false);
 
   useEffect(() => {
-    loadStoredAuth();
+    loadUser();
   }, []);
 
-  const loadStoredAuth = async () => {
+  async function loadUser() {
     try {
-      const stored = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
-      if (stored) {
-        const parsedUser = JSON.parse(stored);
-        setUser(parsedUser);
+      const storedUser = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
       }
-    } catch (error) {
-      console.error("Failed to load auth:", error);
+    } catch (e) {
+      console.error("Failed to load user", e);
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  async function login(email: string, password: string) {
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     const normalizedEmail = email.toLowerCase().trim();
-    const mockUser = mockUsers[normalizedEmail];
+    const mockAccount = mockUsers[normalizedEmail];
 
-    if (!mockUser) {
-      return { success: false, error: "Utilizador não encontrado" };
+    if (!mockAccount || mockAccount.password !== password) {
+      return { success: false, error: "Invalid email or password" };
     }
 
-    if (mockUser.password !== password) {
-      return { success: false, error: "Palavra-passe incorreta" };
-    }
-
-    setUser(mockUser.user);
-    await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(mockUser.user));
+    const userData = mockAccount.user;
+    setUser(userData);
+    // Reset skip state on new login, so incomplete profile triggers onboarding
+    setHasSkippedOnboarding(false);
+    await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(userData));
     return { success: true };
+  }
+
+  async function register(userData: { firstName: string; lastName: string; email: string; phone: string }) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Create new mock user
+    const newUser: User = {
+      id: Math.random().toString(),
+      email: userData.email,
+      role: 'member',
+      fullName: `${userData.firstName} ${userData.lastName}`,
+      phone: userData.phone,
+      memberSince: new Date().toISOString().split('T')[0],
+      membershipTier: 'bronze',
+      membershipExpiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      isProfileComplete: false
+    };
+
+    // Auto login
+    setUser(newUser);
+    // Do NOT auto-skip. Let the user choose to skip in the Onboarding screens.
+    // setHasSkippedOnboarding(true); 
+    await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newUser));
+  }
+
+  function skipOnboarding() {
+    setHasSkippedOnboarding(true);
   };
 
   const logout = async () => {
     setUser(null);
+    setHasSkippedOnboarding(false);
     await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
   };
 
@@ -146,10 +179,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const completeProfile = async (profileData: Partial<User>) => {
     if (!user) return;
-    const updatedUser = { 
-      ...user, 
-      ...profileData, 
-      isProfileComplete: true 
+    const updatedUser = {
+      ...user,
+      ...profileData,
+      isProfileComplete: true
     };
     setUser(updatedUser);
     await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser));
@@ -161,10 +194,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isLoading,
         isAuthenticated: !!user,
+        hasSkippedOnboarding,
         login,
+        register,
         logout,
         updateProfile,
         completeProfile,
+        skipOnboarding
       }}
     >
       {children}

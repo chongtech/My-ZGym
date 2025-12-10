@@ -26,16 +26,17 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { ThemedText } from "@/components/ThemedText";
-import { Spacing, BorderRadius } from "@/constants/theme";
+import { Spacing, BorderRadius, BrandColors } from "@/constants/theme";
 import { RootStackParamList } from "@/navigation/RootStackNavigator";
+import { useAuth } from "@/context/AuthContext";
+import { Button } from "@/components/Button";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
-
-const LIME_GREEN = "#BFFF00";
 
 export default function RegisterScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { register } = useAuth();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -99,7 +100,7 @@ export default function RegisterScreen() {
     }
 
     const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
@@ -121,7 +122,7 @@ export default function RegisterScreen() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
@@ -152,17 +153,13 @@ export default function RegisterScreen() {
 
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      Alert.alert(
-        "Registo Concluído",
-        "A tua conta foi criada com sucesso! Podes agora iniciar sessão.",
-        [
-          {
-            text: "OK",
-            onPress: () => navigation.navigate("Login"),
-          },
-        ]
-      );
+      await register({
+        firstName,
+        lastName,
+        email,
+        phone,
+      });
+      // No need to navigate manually; auth state change in RootStackNavigator will handle it
     } catch (err) {
       setError("Ocorreu um erro ao criar a conta");
     } finally {
@@ -223,13 +220,13 @@ export default function RegisterScreen() {
         </Pressable>
         <View style={styles.selfieButtons}>
           <Pressable style={styles.selfieOptionButton} onPress={handleTakeSelfie}>
-            <Feather name="camera" size={16} color={LIME_GREEN} />
+            <Feather name="camera" size={16} color={BrandColors.primary} />
             <ThemedText type="small" style={styles.selfieOptionText}>
               Tirar Foto
             </ThemedText>
           </Pressable>
           <Pressable style={styles.selfieOptionButton} onPress={handleChooseFromGallery}>
-            <Feather name="image" size={16} color={LIME_GREEN} />
+            <Feather name="image" size={16} color={BrandColors.primary} />
             <ThemedText type="small" style={styles.selfieOptionText}>
               Galeria
             </ThemedText>
@@ -253,7 +250,7 @@ export default function RegisterScreen() {
               style={[
                 styles.inputWrapper,
                 styles.halfInput,
-                firstNameFocused && { borderColor: LIME_GREEN, borderWidth: 2 },
+                firstNameFocused && { borderColor: BrandColors.primary, borderWidth: 2 },
               ]}
             >
               <TextInput
@@ -271,7 +268,7 @@ export default function RegisterScreen() {
               style={[
                 styles.inputWrapper,
                 styles.halfInput,
-                lastNameFocused && { borderColor: LIME_GREEN, borderWidth: 2 },
+                lastNameFocused && { borderColor: BrandColors.primary, borderWidth: 2 },
               ]}
             >
               <TextInput
@@ -290,7 +287,7 @@ export default function RegisterScreen() {
           <View
             style={[
               styles.inputWrapper,
-              emailFocused && { borderColor: LIME_GREEN, borderWidth: 2 },
+              emailFocused && { borderColor: BrandColors.primary, borderWidth: 2 },
             ]}
           >
             <TextInput
@@ -310,7 +307,7 @@ export default function RegisterScreen() {
           <View
             style={[
               styles.inputWrapper,
-              phoneFocused && { borderColor: LIME_GREEN, borderWidth: 2 },
+              phoneFocused && { borderColor: BrandColors.primary, borderWidth: 2 },
             ]}
           >
             <TextInput
@@ -328,7 +325,7 @@ export default function RegisterScreen() {
           <View
             style={[
               styles.inputWrapper,
-              passwordFocused && { borderColor: LIME_GREEN, borderWidth: 2 },
+              passwordFocused && { borderColor: BrandColors.primary, borderWidth: 2 },
             ]}
           >
             <TextInput
@@ -348,7 +345,7 @@ export default function RegisterScreen() {
               <Feather
                 name={showPassword ? "eye-off" : "eye"}
                 size={20}
-                color={passwordFocused ? LIME_GREEN : "rgba(255,255,255,0.5)"}
+                color={passwordFocused ? BrandColors.primary : "rgba(255,255,255,0.5)"}
               />
             </Pressable>
           </View>
@@ -356,7 +353,7 @@ export default function RegisterScreen() {
           <View
             style={[
               styles.inputWrapper,
-              confirmPasswordFocused && { borderColor: LIME_GREEN, borderWidth: 2 },
+              confirmPasswordFocused && { borderColor: BrandColors.primary, borderWidth: 2 },
             ]}
           >
             <TextInput
@@ -376,29 +373,24 @@ export default function RegisterScreen() {
               <Feather
                 name={showConfirmPassword ? "eye-off" : "eye"}
                 size={20}
-                color={confirmPasswordFocused ? LIME_GREEN : "rgba(255,255,255,0.5)"}
+                color={confirmPasswordFocused ? BrandColors.primary : "rgba(255,255,255,0.5)"}
               />
             </Pressable>
           </View>
 
-          <Pressable
-            style={[styles.registerButton, isLoading && styles.registerButtonDisabled]}
+          <Button
             onPress={handleRegister}
             disabled={isLoading}
+            loading={isLoading}
+            style={styles.registerButton}
           >
-            {isLoading ? (
-              <ActivityIndicator color="#000000" size="small" />
-            ) : (
-              <ThemedText type="button" style={styles.registerButtonText}>
-                Criar Conta
-              </ThemedText>
-            )}
-          </Pressable>
+            Criar Conta
+          </Button>
         </View>
 
         <View style={styles.loginContainer}>
           <ThemedText type="body" style={styles.loginText}>
-            Já tens conta?{" "}
+            Já tens conta?
           </ThemedText>
           <Pressable onPress={handleGoToLogin}>
             <ThemedText type="body" style={styles.loginLink}>
@@ -486,7 +478,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: LIME_GREEN,
+    backgroundColor: BrandColors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -503,7 +495,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.xs,
   },
   selfieOptionText: {
-    color: LIME_GREEN,
+    color: BrandColors.primary,
     fontWeight: "500",
   },
   selfieHint: {
@@ -552,7 +544,7 @@ const styles = StyleSheet.create({
     padding: Spacing.xs,
   },
   registerButton: {
-    backgroundColor: LIME_GREEN,
+    backgroundColor: BrandColors.primary,
     height: 56,
     borderRadius: 28,
     alignItems: "center",
@@ -578,7 +570,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   loginLink: {
-    color: LIME_GREEN,
+    color: BrandColors.primary,
     fontSize: 15,
     fontWeight: "600",
   },

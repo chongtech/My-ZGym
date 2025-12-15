@@ -130,8 +130,39 @@ export default function OnboardingHeightScreen() {
 
                 {/* Main Measurement Content */}
                 <View style={styles.measurementArea}>
-                    {/* Horizontal Layout: Ruler + Body Image */}
+                    {/* Horizontal Layout: Body Image (Left) + Ruler (Right) */}
                     <View style={styles.horizontalContainer}>
+                        {/* Body Image and Height Display */}
+                        <View style={styles.imageContainer}>
+                            {/* Body Silhouette */}
+                            <Image
+                                source={bodyImageUrl}
+                                style={styles.bodyImage}
+                                contentFit="contain"
+                            />
+
+                            <View style={styles.heightDisplayContainer}>
+                                <ThemedText style={styles.heightValue}>
+                                    {isCm ? (
+                                        <>
+                                            {heightCm}
+                                            <ThemedText style={styles.heightUnit}> cm</ThemedText>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {cmToFeetInches(heightCm).feet}'{cmToFeetInches(heightCm).inches}"
+                                        </>
+                                    )}
+                                </ThemedText>
+                            </View>
+
+                            {/* Height Indicator Line */}
+                            <View style={styles.heightLineContainer}>
+                                <View style={styles.heightLine} />
+                                <ThemedText style={styles.heightLineLabel}>{heightCm}</ThemedText>
+                            </View>
+                        </View>
+
                         {/* Vertical Ruler */}
                         <View style={styles.rulerWrapper}>
                             {/* Blue Indicator Line */}
@@ -156,6 +187,11 @@ export default function OnboardingHeightScreen() {
                                     const isMultipleOfTen = item % 10 === 0;
                                     return (
                                         <View style={[styles.rulerItem, { height: ITEM_HEIGHT }]}>
+                                            {isMultipleOfTen && (
+                                                <ThemedText style={styles.rulerLabel}>
+                                                    {item}
+                                                </ThemedText>
+                                            )}
                                             <View style={[
                                                 styles.rulerTick,
                                                 {
@@ -163,11 +199,6 @@ export default function OnboardingHeightScreen() {
                                                     backgroundColor: isMultipleOfTen ? theme.text : theme.border
                                                 }
                                             ]} />
-                                            {isMultipleOfTen && (
-                                                <ThemedText style={styles.rulerLabel}>
-                                                    {item}
-                                                </ThemedText>
-                                            )}
                                         </View>
                                     );
                                 }}
@@ -185,37 +216,6 @@ export default function OnboardingHeightScreen() {
                                 start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
                                 style={[styles.verticalFade, { bottom: 0 }]}
                                 pointerEvents="none"
-                            />
-                        </View>
-
-                        {/* Body Image and Height Display */}
-                        <View style={styles.imageContainer}>
-                            <View style={styles.heightDisplayContainer}>
-                                <ThemedText style={styles.heightValue}>
-                                    {isCm ? (
-                                        <>
-                                            {heightCm}
-                                            <ThemedText style={styles.heightUnit}> cm</ThemedText>
-                                        </>
-                                    ) : (
-                                        <>
-                                            {cmToFeetInches(heightCm).feet}'{cmToFeetInches(heightCm).inches}"
-                                        </>
-                                    )}
-                                </ThemedText>
-                            </View>
-
-                            {/* Height Indicator Line */}
-                            <View style={styles.heightLineContainer}>
-                                <View style={styles.heightLine} />
-                                <ThemedText style={styles.heightLineLabel}>{heightCm}</ThemedText>
-                            </View>
-
-                            {/* Body Silhouette */}
-                            <Image
-                                source={bodyImageUrl}
-                                style={styles.bodyImage}
-                                contentFit="contain"
                             />
                         </View>
                     </View>
@@ -313,6 +313,7 @@ const styles = StyleSheet.create({
     rulerItem: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'flex-end', // Align items to the right
         paddingRight: 10,
     },
     rulerTick: {
@@ -320,13 +321,14 @@ const styles = StyleSheet.create({
         borderRadius: 1,
     },
     rulerLabel: {
-        marginLeft: 10,
+        marginRight: 10, // Changed from marginLeft
         fontSize: 12,
         color: '#888',
+        textAlign: 'right',
     },
     centerIndicator: {
         position: 'absolute',
-        left: 0,
+        right: 0, // Changed from left: 0
         top: '50%',
         marginTop: -75,
         width: 60,

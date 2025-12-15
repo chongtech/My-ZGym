@@ -30,10 +30,9 @@ export default function OnboardingStep3Screen() {
 
     // Receive accumulated data
     const params = route.params || {};
-
     const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
 
-    const { skipOnboarding } = useAuth();
+    const { saveOnboardingProgress, skipOnboarding } = useAuth(); // Destructure saveOnboardingProgress
 
     const handleNext = () => {
         if (selectedGoal) {
@@ -46,6 +45,8 @@ export default function OnboardingStep3Screen() {
     };
 
     const handleSkip = () => {
+        // Save accumulated data before skipping
+        saveOnboardingProgress(params);
         skipOnboarding();
     };
 
@@ -56,12 +57,12 @@ export default function OnboardingStep3Screen() {
                     <Feather name="arrow-left" size={24} color={theme.text} />
                 </TouchableOpacity>
 
-                {/* Progress Bar - 70% */}
+                {/* Progress Bar - 90% */}
                 <View style={[styles.progressContainer, { backgroundColor: theme.border }]}>
-                    <View style={[styles.progressBar, { width: '70%', backgroundColor: BrandColors.primary }]} />
+                    <View style={[styles.progressBar, { width: '90%', backgroundColor: BrandColors.primary }]} />
                 </View>
                 <TouchableOpacity onPress={handleSkip} style={{ padding: 8 }}>
-                    <ThemedText style={{ fontSize: 14, fontWeight: '600' }}>Saltar</ThemedText>
+                    <ThemedText style={{ fontSize: 14, fontWeight: '600' }}>Pular</ThemedText>
                 </TouchableOpacity>
             </View>
 

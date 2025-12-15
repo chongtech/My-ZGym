@@ -108,13 +108,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function loadUser() {
     try {
+      console.log("AuthContext: Loading user...");
       const storedUser = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
+      console.log("AuthContext: Stored user found:", !!storedUser);
       if (storedUser) {
         setUser(JSON.parse(storedUser));
       }
     } catch (e) {
       console.error("Failed to load user", e);
     } finally {
+      console.log("AuthContext: Finished loading user");
       setIsLoading(false);
     }
   }

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { View, StyleSheet, TouchableOpacity, Dimensions, FlatList, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -19,6 +19,33 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const ITEM_HEIGHT = 8; // Height of each cm tick
 const MIN_HEIGHT_CM = 130; // cm
 const MAX_HEIGHT_CM = 220; // cm
+
+// Memoized ruler item component
+const RulerItem = React.memo(({
+  item,
+  theme
+}: {
+  item: number;
+  theme: any;
+}) => {
+  const isMultipleOfTen = item % 10 === 0;
+  return (
+    <View style={[styles.rulerItem, { height: ITEM_HEIGHT }]}>
+      {isMultipleOfTen && (
+        <ThemedText style={styles.rulerLabel}>
+          {item}
+        </ThemedText>
+      )}
+      <View style={[
+        styles.rulerTick,
+        {
+          width: isMultipleOfTen ? 40 : 20,
+          backgroundColor: isMultipleOfTen ? theme.text : theme.border
+        }
+      ]} />
+    </View>
+  );
+});
 
 export default function OnboardingHeightScreen() {
     const insets = useSafeAreaInsets();
@@ -73,14 +100,20 @@ export default function OnboardingHeightScreen() {
         }, 100);
     }, []);
 
-    const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const onScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const offsetY = event.nativeEvent.contentOffset.y;
         const index = Math.round(offsetY / ITEM_HEIGHT);
 
         if (index >= 0 && index < rulerData.length) {
             setHeightCm(rulerData[index]);
         }
-    };
+    }, [rulerData]);
+
+    const renderRulerItem = useCallback(({ item }: { item: number }) => (
+        <RulerItem item={item} theme={theme} />
+    ), [theme]);
+
+    const keyExtractor = useCallback((item: number) => item.toString(), []);
 
     // Select the appropriate image based on sex
     const bodyImageUrl = sex === 'male'
@@ -171,7 +204,7 @@ export default function OnboardingHeightScreen() {
                             <FlatList
                                 ref={flatListRef}
                                 data={rulerData}
-                                keyExtractor={(item) => item.toString()}
+                                keyExtractor={keyExtractor}
                                 showsVerticalScrollIndicator={false}
                                 snapToInterval={ITEM_HEIGHT}
                                 decelerationRate="fast"
@@ -183,25 +216,12 @@ export default function OnboardingHeightScreen() {
                                 getItemLayout={(_data, index) => (
                                     { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
                                 )}
-                                renderItem={({ item }) => {
-                                    const isMultipleOfTen = item % 10 === 0;
-                                    return (
-                                        <View style={[styles.rulerItem, { height: ITEM_HEIGHT }]}>
-                                            {isMultipleOfTen && (
-                                                <ThemedText style={styles.rulerLabel}>
-                                                    {item}
-                                                </ThemedText>
-                                            )}
-                                            <View style={[
-                                                styles.rulerTick,
-                                                {
-                                                    width: isMultipleOfTen ? 40 : 20,
-                                                    backgroundColor: isMultipleOfTen ? theme.text : theme.border
-                                                }
-                                            ]} />
-                                        </View>
-                                    );
-                                }}
+                                renderItem={renderRulerItem}
+                                removeClippedSubviews={true}
+                                maxToRenderPerBatch={20}
+                                updateCellsBatchingPeriod={50}
+                                windowSize={21}
+                                initialNumToRender={30}
                             />
 
                             {/* Top/Bottom Fades */}

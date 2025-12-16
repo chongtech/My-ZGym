@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { View, StyleSheet, TouchableOpacity, Dimensions, FlatList, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
@@ -21,6 +21,23 @@ const PICKER_HEIGHT = ITEM_HEIGHT * VISIBLE_ITEMS; // 300
 const MIN_AGE = 14;
 const MAX_AGE = 100;
 
+// Memoized age item component
+const AgeItem = React.memo(({ item, selectedAge }: { item: number; selectedAge: number }) => {
+    const isSelected = item === selectedAge;
+    return (
+        <View style={[styles.ageItem, { height: ITEM_HEIGHT }]}>
+            <ThemedText
+                style={[
+                    styles.ageText,
+                    isSelected && styles.selectedAgeText
+                ]}
+            >
+                {item}
+            </ThemedText>
+        </View>
+    );
+});
+
 export default function OnboardingAgeScreen() {
     const insets = useSafeAreaInsets();
     const { theme } = useTheme();
@@ -40,13 +57,34 @@ export default function OnboardingAgeScreen() {
     }, []);
 
     // Scroll Logic
-    const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const onScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const offsetY = event.nativeEvent.contentOffset.y;
         const index = Math.round(offsetY / ITEM_HEIGHT);
         if (index >= 0 && index < ages.length) {
             setAge(ages[index]);
         }
-    };
+    }, [ages]);
+
+    const renderAgeItem = useCallback(({ item }: { item: number }) => {
+        const isSelected = item === age;
+        return (
+            <View style={[styles.pickerItem, { height: ITEM_HEIGHT }]}>
+                <ThemedText style={[
+                    styles.itemText,
+                    {
+                        color: isSelected ? theme.text : '#C0C0C0',
+                        fontSize: isSelected ? 36 : 28,
+                        fontWeight: isSelected ? '800' : '600'
+                    }
+                ]}>
+                    {item}
+                    {isSelected && <ThemedText style={styles.unitText}> anos</ThemedText>}
+                </ThemedText>
+            </View>
+        );
+    }, [age, theme]);
+
+    const keyExtractor = useCallback((item: number) => item.toString(), []);
 
     // Initial Position
     useEffect(() => {
@@ -101,7 +139,7 @@ export default function OnboardingAgeScreen() {
                     <FlatList
                         ref={flatListRef}
                         data={ages}
-                        keyExtractor={(item) => item.toString()}
+                        keyExtractor={keyExtractor}
                         showsVerticalScrollIndicator={false}
                         snapToInterval={ITEM_HEIGHT}
                         decelerationRate="fast"
@@ -113,24 +151,12 @@ export default function OnboardingAgeScreen() {
                         getItemLayout={(data, index) => (
                             { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
                         )}
-                        renderItem={({ item }) => {
-                            const isSelected = item === age;
-                            return (
-                                <View style={[styles.pickerItem, { height: ITEM_HEIGHT }]}>
-                                    <ThemedText style={[
-                                        styles.itemText,
-                                        {
-                                            color: isSelected ? theme.text : '#C0C0C0', // Gray for unselected
-                                            fontSize: isSelected ? 36 : 28,
-                                            fontWeight: isSelected ? '800' : '600'
-                                        }
-                                    ]}>
-                                        {item}
-                                        {isSelected && <ThemedText style={styles.unitText}> anos</ThemedText>}
-                                    </ThemedText>
-                                </View>
-                            );
-                        }}
+                        renderItem={renderAgeItem}
+                        removeClippedSubviews={true}
+                        maxToRenderPerBatch={10}
+                        updateCellsBatchingPeriod={50}
+                        windowSize={11}
+                        initialNumToRender={7}
                     />
 
                     {/* Fades */}

@@ -10,6 +10,7 @@ import { Card } from "@/components/Card";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/context/AuthContext";
 import { Spacing, BorderRadius, BrandColors } from "@/constants/theme";
+import { mockInstructorStats } from "@/data/mockData";
 
 interface SettingItemProps {
   icon: string;
@@ -187,6 +188,67 @@ export default function ProfileScreen() {
           value={user?.emergencyContactName || "Não definido"}
         />
       </Card>
+
+      {user?.role === 'instructor' && (
+        <>
+          <Card style={styles.section} elevation={1}>
+            <ThemedText type="h4" style={styles.sectionTitle}>
+              Informação Profissional
+            </ThemedText>
+            <SettingItem
+              icon="briefcase"
+              label="Biografia"
+              value="Editar"
+            />
+            <SettingItem
+              icon="award"
+              label="Certificações"
+              value="3 certificados"
+            />
+            <SettingItem
+              icon="target"
+              label="Especializações"
+              value="Força, Hipertrofia"
+            />
+          </Card>
+
+          <Card style={styles.section} elevation={1}>
+            <ThemedText type="h4" style={styles.sectionTitle}>
+              Estatísticas do Instrutor
+            </ThemedText>
+            <SettingItem
+              icon="users"
+              label="Total de Clientes"
+              value={`${mockInstructorStats.totalClients}`}
+              showChevron={false}
+            />
+            <SettingItem
+              icon="clipboard"
+              label="Rotinas Ativas"
+              value={`${mockInstructorStats.activeRoutines}`}
+              showChevron={false}
+            />
+            <SettingItem
+              icon="calendar"
+              label="Sessões esta Semana"
+              value={`${mockInstructorStats.sessionsThisWeek}`}
+              showChevron={false}
+            />
+            <SettingItem
+              icon="activity"
+              label="Sessões Completadas"
+              value={`${mockInstructorStats.totalSessionsCompleted}`}
+              showChevron={false}
+            />
+            <SettingItem
+              icon="star"
+              label="Satisfação Média"
+              value={`${mockInstructorStats.averageClientSatisfaction}/5.0`}
+              showChevron={false}
+            />
+          </Card>
+        </>
+      )}
 
       <Card style={styles.section} elevation={1}>
         <ThemedText type="h4" style={styles.sectionTitle}>

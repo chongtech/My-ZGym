@@ -4,30 +4,30 @@ import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Platform, StyleSheet } from "react-native";
 
-import HomeStackNavigator from "@/navigation/HomeStackNavigator";
-import ScheduleStackNavigator from "@/navigation/ScheduleStackNavigator";
-import WorkoutsStackNavigator from "@/navigation/WorkoutsStackNavigator";
-import ProgressStackNavigator from "@/navigation/ProgressStackNavigator";
+import InstructorDashboardStackNavigator from "@/navigation/InstructorDashboardStackNavigator";
+import InstructorClientsStackNavigator from "@/navigation/InstructorClientsStackNavigator";
+import InstructorWorkoutsStackNavigator from "@/navigation/InstructorWorkoutsStackNavigator";
+import InstructorScheduleStackNavigator from "@/navigation/InstructorScheduleStackNavigator";
 import ProfileStackNavigator from "@/navigation/ProfileStackNavigator";
 import { useTheme } from "@/hooks/useTheme";
 import { BrandColors } from "@/constants/theme";
 
-export type MainTabParamList = {
-  HomeTab: undefined;
-  ScheduleTab: undefined;
-  WorkoutsTab: undefined;
-  ProgressTab: undefined;
+export type InstructorTabParamList = {
+  InstructorDashboardTab: undefined;
+  InstructorClientsTab: undefined;
+  InstructorWorkoutsTab: undefined;
+  InstructorScheduleTab: undefined;
   ProfileTab: undefined;
 };
 
-const Tab = createBottomTabNavigator<MainTabParamList>();
+const Tab = createBottomTabNavigator<InstructorTabParamList>();
 
-export default function MainTabNavigator() {
+export default function InstructorTabNavigator() {
   const { theme, isDark } = useTheme();
 
   return (
     <Tab.Navigator
-      initialRouteName="HomeTab"
+      initialRouteName="InstructorDashboardTab"
       screenOptions={{
         tabBarActiveTintColor: BrandColors.primary,
         tabBarInactiveTintColor: theme.tabIconDefault,
@@ -52,28 +52,28 @@ export default function MainTabNavigator() {
       }}
     >
       <Tab.Screen
-        name="HomeTab"
-        component={HomeStackNavigator}
+        name="InstructorDashboardTab"
+        component={InstructorDashboardStackNavigator}
         options={{
-          title: "Início",
+          title: "Painel",
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="ScheduleTab"
-        component={ScheduleStackNavigator}
+        name="InstructorClientsTab"
+        component={InstructorClientsStackNavigator}
         options={{
-          title: "Horário",
+          title: "Clientes",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="calendar" size={size} color={color} />
+            <Feather name="users" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="WorkoutsTab"
-        component={WorkoutsStackNavigator}
+        name="InstructorWorkoutsTab"
+        component={InstructorWorkoutsStackNavigator}
         options={{
           title: "Treinos",
           tabBarIcon: ({ color, size }) => (
@@ -82,12 +82,12 @@ export default function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="ProgressTab"
-        component={ProgressStackNavigator}
+        name="InstructorScheduleTab"
+        component={InstructorScheduleStackNavigator}
         options={{
-          title: "Progresso",
+          title: "Agenda",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="trending-up" size={size} color={color} />
+            <Feather name="calendar" size={size} color={color} />
           ),
         }}
       />

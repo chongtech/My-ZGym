@@ -3,6 +3,7 @@ import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import MainTabNavigator from "@/navigation/MainTabNavigator";
+import InstructorTabNavigator from "@/navigation/InstructorTabNavigator";
 import LoginScreen from "@/screens/LoginScreen";
 import RegisterScreen from "@/screens/RegisterScreen";
 import OnboardingStep1Screen from "@/screens/onboarding/OnboardingStep1Screen";
@@ -35,6 +36,7 @@ export type RootStackParamList = {
   OnboardingStep4: { sex: 'male' | 'female'; height: number; currentWeight: number; goalWeight: number; experienceLevel: string; age: number; frequency: string; mainGoal: string };
   ProfileCompletion: undefined;
   Main: undefined;
+  InstructorMain: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -67,6 +69,12 @@ export default function RootStackNavigator() {
             options={{ headerShown: false }}
           />
         </>
+      ) : user?.role === 'instructor' ? (
+        <Stack.Screen
+          name="InstructorMain"
+          component={InstructorTabNavigator}
+          options={{ headerShown: false }}
+        />
       ) : (!user?.isProfileComplete && !hasSkippedOnboarding) ? (
         <>
           <Stack.Screen

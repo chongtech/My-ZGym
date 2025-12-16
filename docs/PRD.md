@@ -401,6 +401,52 @@ CREATE TABLE members (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
+-- Member Health Profile Table (Onboarding Data)
+CREATE TABLE member_health_profiles (
+  id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+  member_id VARCHAR NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+
+  -- Physical Metrics (Step 2 - Height Screen)
+  sex VARCHAR(10) CHECK (sex IN ('male', 'female')),
+  height_cm DECIMAL(5,2), -- Height in centimeters (e.g., 170.5)
+  height_unit VARCHAR(5) DEFAULT 'cm' CHECK (height_unit IN ('cm', 'ft')),
+
+  -- Weight Data (Weight Screen & Goal Weight Screen)
+  current_weight_kg DECIMAL(5,2), -- Current weight in kg (e.g., 75.5)
+  goal_weight_kg DECIMAL(5,2), -- Goal weight in kg
+  weight_unit VARCHAR(5) DEFAULT 'kg' CHECK (weight_unit IN ('kg', 'lbs')),
+
+  -- Fitness Profile (Experience Screen)
+  experience_level VARCHAR(20) CHECK (experience_level IN ('beginner', 'intermediate', 'advanced')),
+
+  -- Demographics (Age Screen)
+  age INTEGER CHECK (age >= 14 AND age <= 100),
+
+  -- Training Preferences (Frequency Screen)
+  training_frequency VARCHAR(20) CHECK (training_frequency IN ('1_day', '2_days', '3_days', '4_days', '5_days', '6_days', 'everyday')),
+
+  -- Fitness Goals (Step 3 Screen)
+  main_goal VARCHAR(30) CHECK (main_goal IN ('stronger', 'muscle', 'lean', 'weight_loss', 'health', 'performance')),
+
+  -- Calculated Metrics
+  current_bmi DECIMAL(4,2), -- Calculated BMI based on current weight
+  goal_bmi DECIMAL(4,2), -- Calculated BMI based on goal weight
+  weight_difference_kg DECIMAL(5,2), -- Difference between current and goal weight
+
+  -- Profile Completion Status
+  onboarding_completed BOOLEAN DEFAULT FALSE,
+  onboarding_skipped BOOLEAN DEFAULT FALSE,
+  onboarding_completed_at TIMESTAMP,
+
+  -- Audit Fields
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Create indexes for performance
+CREATE INDEX idx_member_health_profiles_member_id ON member_health_profiles(member_id);
+CREATE INDEX idx_member_health_profiles_onboarding_completed ON member_health_profiles(onboarding_completed);
+
 -- Classes Table (Planned)
 CREATE TABLE classes (
   id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -753,6 +799,78 @@ interface Exercise {
 }
 ```
 
+### 9.6 Member Health Profile Model (Onboarding Data)
+
+```typescript
+interface MemberHealthProfile {
+  id: string;
+  memberId: string;
+
+  // Physical Metrics (Collected in OnboardingStep2 & OnboardingHeight)
+  sex: 'male' | 'female';
+  heightCm: number; // Height in centimeters (e.g., 170.5)
+  heightUnit: 'cm' | 'ft';
+
+  // Weight Data (Collected in OnboardingWeight & OnboardingGoalWeight)
+  currentWeightKg: number; // Current weight in kg (e.g., 75.5)
+  goalWeightKg: number; // Goal weight in kg
+  weightUnit: 'kg' | 'lbs';
+
+  // Fitness Profile (Collected in OnboardingExperience)
+  experienceLevel: 'beginner' | 'intermediate' | 'advanced';
+
+  // Demographics (Collected in OnboardingAge)
+  age: number; // Between 14 and 100
+
+  // Training Preferences (Collected in OnboardingFrequency)
+  trainingFrequency: '1_day' | '2_days' | '3_days' | '4_days' | '5_days' | '6_days' | 'everyday';
+
+  // Fitness Goals (Collected in OnboardingStep3)
+  mainGoal: 'stronger' | 'muscle' | 'lean' | 'weight_loss' | 'health' | 'performance';
+
+  // Calculated Metrics
+  currentBmi: number; // Calculated: weight / (height in meters)²
+  goalBmi: number; // Calculated: goalWeight / (height in meters)²
+  weightDifferenceKg: number; // currentWeight - goalWeight
+
+  // Profile Completion Status
+  onboardingCompleted: boolean;
+  onboardingSkipped: boolean;
+  onboardingCompletedAt?: string; // ISO timestamp
+
+  // Audit Fields
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Onboarding Flow Data Structure (Route Params)
+interface OnboardingData {
+  // Step 2 (Sex Selection)
+  sex?: 'male' | 'female';
+
+  // Height Screen
+  height?: number; // in cm
+
+  // Weight Screen
+  currentWeight?: number; // in kg
+
+  // Goal Weight Screen
+  goalWeight?: number; // in kg
+
+  // Experience Screen
+  experienceLevel?: 'beginner' | 'intermediate' | 'advanced';
+
+  // Age Screen
+  age?: number;
+
+  // Frequency Screen
+  frequency?: '1_day' | '2_days' | '3_days' | '4_days' | '5_days' | '6_days' | 'everyday';
+
+  // Step 3 (Main Goal)
+  mainGoal?: 'stronger' | 'muscle' | 'lean' | 'weight_loss' | 'health' | 'performance';
+}
+```
+
 ---
 
 ## 10. API Specifications
@@ -803,6 +921,58 @@ interface Exercise {
 | GET | `/api/progress/workouts` | List user workouts |
 | POST | `/api/progress/workouts` | Log new workout |
 | GET | `/api/progress/achievements` | Get user achievements |
+
+### 10.6 Onboarding / Health Profile Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users/me/health-profile` | Get user's health profile and onboarding data |
+| POST | `/api/users/me/health-profile` | Create or update health profile (onboarding data) |
+| PATCH | `/api/users/me/health-profile` | Partially update health profile |
+| POST | `/api/users/me/onboarding/complete` | Mark onboarding as completed |
+| POST | `/api/users/me/onboarding/skip` | Mark onboarding as skipped |
+
+**Request Body Example (POST /api/users/me/health-profile):**
+```json
+{
+  "sex": "male",
+  "heightCm": 175.0,
+  "heightUnit": "cm",
+  "currentWeightKg": 75.5,
+  "goalWeightKg": 70.0,
+  "weightUnit": "kg",
+  "experienceLevel": "intermediate",
+  "age": 30,
+  "trainingFrequency": "3_days",
+  "mainGoal": "weight_loss"
+}
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid-123",
+    "memberId": "member-uuid",
+    "sex": "male",
+    "heightCm": 175.0,
+    "currentWeightKg": 75.5,
+    "goalWeightKg": 70.0,
+    "currentBmi": 24.7,
+    "goalBmi": 22.9,
+    "weightDifferenceKg": 5.5,
+    "experienceLevel": "intermediate",
+    "age": 30,
+    "trainingFrequency": "3_days",
+    "mainGoal": "weight_loss",
+    "onboardingCompleted": true,
+    "onboardingCompletedAt": "2025-12-15T10:30:00Z",
+    "createdAt": "2025-12-15T10:30:00Z",
+    "updatedAt": "2025-12-15T10:30:00Z"
+  }
+}
+```
 
 ---
 

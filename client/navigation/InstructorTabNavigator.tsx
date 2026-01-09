@@ -7,7 +7,9 @@ import { Platform, StyleSheet } from "react-native";
 import InstructorDashboardStackNavigator from "@/navigation/InstructorDashboardStackNavigator";
 import InstructorClientsStackNavigator from "@/navigation/InstructorClientsStackNavigator";
 import InstructorWorkoutsStackNavigator from "@/navigation/InstructorWorkoutsStackNavigator";
+import InstructorAssessmentsStackNavigator from "@/navigation/InstructorAssessmentsStackNavigator";
 import InstructorScheduleStackNavigator from "@/navigation/InstructorScheduleStackNavigator";
+import InstructorShopStackNavigator from "@/navigation/InstructorShopStackNavigator";
 import ProfileStackNavigator from "@/navigation/ProfileStackNavigator";
 import { useTheme } from "@/hooks/useTheme";
 import { BrandColors } from "@/constants/theme";
@@ -16,7 +18,9 @@ export type InstructorTabParamList = {
   InstructorDashboardTab: undefined;
   InstructorClientsTab: undefined;
   InstructorWorkoutsTab: undefined;
+  InstructorAssessmentsTab: undefined;
   InstructorScheduleTab: undefined;
+  InstructorShopTab: undefined;
   ProfileTab: undefined;
 };
 
@@ -82,12 +86,32 @@ export default function InstructorTabNavigator() {
         }}
       />
       <Tab.Screen
+        name="InstructorAssessmentsTab"
+        component={InstructorAssessmentsStackNavigator}
+        options={{
+          title: "Avaliações",
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="activity" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="InstructorScheduleTab"
         component={InstructorScheduleStackNavigator}
         options={{
           title: "Agenda",
           tabBarIcon: ({ color, size }) => (
             <Feather name="calendar" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="InstructorShopTab"
+        component={InstructorShopStackNavigator}
+        options={{
+          title: "Suplementos",
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="shopping-bag" size={size} color={color} />
           ),
         }}
       />

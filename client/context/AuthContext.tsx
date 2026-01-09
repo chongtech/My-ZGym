@@ -13,7 +13,7 @@ export interface User {
   emergencyContactPhone?: string;
   profilePhoto?: string;
   memberSince: string;
-  membershipTier: "bronze" | "silver" | "gold";
+  membershipTier: "z-total" | "z-junior" | "z-weekend" | "z-senior";
   membershipExpiry: string;
   isProfileComplete: boolean;
 }
@@ -49,7 +49,7 @@ const mockUsers: Record<string, { password: string; user: User }> = {
       emergencyContactPhone: "+1 555-0124",
       profilePhoto: undefined,
       memberSince: "2024-01-15",
-      membershipTier: "gold",
+      membershipTier: "z-total",
       membershipExpiry: "2025-12-31",
       isProfileComplete: true,
     },
@@ -63,7 +63,7 @@ const mockUsers: Record<string, { password: string; user: User }> = {
       fullName: "Mike Trainer",
       phone: "+1 555-0125",
       memberSince: "2023-06-01",
-      membershipTier: "gold",
+      membershipTier: "z-total",
       membershipExpiry: "2025-12-31",
       isProfileComplete: true,
     },
@@ -77,7 +77,7 @@ const mockUsers: Record<string, { password: string; user: User }> = {
       fullName: "Jane Manager",
       phone: "+1 555-0126",
       memberSince: "2022-01-01",
-      membershipTier: "gold",
+      membershipTier: "z-total",
       membershipExpiry: "2025-12-31",
       isProfileComplete: true,
     },
@@ -90,7 +90,7 @@ const mockUsers: Record<string, { password: string; user: User }> = {
       role: "member",
       fullName: "",
       memberSince: "2024-12-01",
-      membershipTier: "bronze",
+      membershipTier: "z-weekend",
       membershipExpiry: "2025-12-01",
       isProfileComplete: false,
     },

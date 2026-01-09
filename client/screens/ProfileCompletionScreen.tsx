@@ -217,7 +217,7 @@ export default function ProfileCompletionScreen() {
                 <ThemedText
                   type="small"
                   style={{
-                    color: selectedGoals.includes(goal) ? "#FFFFFF" : theme.text,
+                    color: selectedGoals.includes(goal) ? theme.backgroundRoot : theme.text,
                     fontWeight: "500",
                   }}
                 >
@@ -234,7 +234,7 @@ export default function ProfileCompletionScreen() {
           style={[styles.submitButton, { backgroundColor: BrandColors.primary }]}
         >
           {isLoading ? (
-            <ActivityIndicator color="#FFFFFF" size="small" />
+            <ActivityIndicator color={theme.backgroundRoot} size="small" />
           ) : (
             "Completar Perfil"
           )}

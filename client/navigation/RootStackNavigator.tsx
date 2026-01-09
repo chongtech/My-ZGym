@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import MainTabNavigator from "@/navigation/MainTabNavigator";
 import InstructorTabNavigator from "@/navigation/InstructorTabNavigator";
+import ManagerTabNavigator from "@/navigation/ManagerTabNavigator";
 import LoginScreen from "@/screens/LoginScreen";
 import RegisterScreen from "@/screens/RegisterScreen";
 import OnboardingStep1Screen from "@/screens/onboarding/OnboardingStep1Screen";
@@ -37,6 +38,7 @@ export type RootStackParamList = {
   ProfileCompletion: undefined;
   Main: undefined;
   InstructorMain: undefined;
+  ManagerMain: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -73,6 +75,12 @@ export default function RootStackNavigator() {
         <Stack.Screen
           name="InstructorMain"
           component={InstructorTabNavigator}
+          options={{ headerShown: false }}
+        />
+      ) : user?.role === 'manager' ? (
+        <Stack.Screen
+          name="ManagerMain"
+          component={ManagerTabNavigator}
           options={{ headerShown: false }}
         />
       ) : (!user?.isProfileComplete && !hasSkippedOnboarding) ? (

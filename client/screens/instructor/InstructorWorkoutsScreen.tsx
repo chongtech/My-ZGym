@@ -4,14 +4,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { ThemedText } from "@/components/ThemedText";
 import { RoutineCard } from "@/components/instructor/RoutineCard";
 import { useTheme } from "@/hooks/useTheme";
-import { Spacing, BorderRadius } from "@/constants/theme";
+import { Spacing, BorderRadius, BrandColors } from "@/constants/theme";
 import { mockWorkoutRoutines } from "@/data/mockData";
 import type { InstructorWorkoutsStackParamList } from "@/navigation/InstructorWorkoutsStackNavigator";
 
@@ -56,12 +55,9 @@ export default function InstructorWorkoutsScreen() {
 
       <View style={[styles.fabContainer, { bottom: tabBarHeight + Spacing.lg }]}>
         <Pressable onPress={() => navigation.navigate("WorkoutBuilder", {})}>
-          <LinearGradient
-            colors={['#E8FF2B', '#D4E828']}
-            style={styles.fab}
-          >
-            <Feather name="plus" size={28} color="#000" />
-          </LinearGradient>
+          <View style={[styles.fab, { backgroundColor: BrandColors.primary }]}>
+            <Feather name="plus" size={28} color={theme.text} />
+          </View>
         </Pressable>
       </View>
     </View>
@@ -80,7 +76,7 @@ const styles = StyleSheet.create({
   fabContainer: {
     position: "absolute",
     right: Spacing.lg,
-    shadowColor: "#000",
+    shadowColor: BrandColors.secondary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,

@@ -1,13 +1,11 @@
 import React from "react";
-import { View, StyleSheet, ScrollView, Pressable, Image } from "react-native";
+import { View, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 
 import { ThemedText } from "@/components/ThemedText";
-import { Card } from "@/components/Card";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/context/AuthContext";
 import { Spacing, BorderRadius, BrandColors } from "@/constants/theme";
@@ -21,14 +19,31 @@ const quickActions = [
 
 const getTierColor = (tier: string) => {
   switch (tier) {
-    case "gold":
-      return "#FFD700";
-    case "silver":
-      return "#C0C0C0";
-    case "bronze":
-      return "#CD7F32";
+    case "z-total":
+      return "#D4FF00";
+    case "z-junior":
+      return "#FF6B6B";
+    case "z-weekend":
+      return "#4ECDC4";
+    case "z-senior":
+      return "#95E1D3";
     default:
       return "#C0C0C0";
+  }
+};
+
+const getTierName = (tier: string) => {
+  switch (tier) {
+    case "z-total":
+      return "Z-Total";
+    case "z-junior":
+      return "Z-Júnior";
+    case "z-weekend":
+      return "Z-Fim de Semana";
+    case "z-senior":
+      return "Z-Sénior";
+    default:
+      return tier;
   }
 };
 
@@ -39,7 +54,24 @@ export default function HomeScreen() {
   const { theme } = useTheme();
   const { user } = useAuth();
 
-  const todayClasses = mockClasses.slice(0, 3);
+  // Get today's day of week in Portuguese
+  const today = new Date();
+  const daysOfWeek = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+  const todayName = daysOfWeek[today.getDay()];
+
+  // Filter classes for today and sort by time
+  const todayClassesAll = mockClasses
+    .filter(cls => cls.dayOfWeek === todayName)
+    .sort((a, b) => {
+      const timeA = parseInt(a.time.replace(':', ''));
+      const timeB = parseInt(b.time.replace(':', ''));
+      return timeA - timeB;
+    });
+
+  // Get upcoming classes (classes that haven't started yet)
+  const currentTime = `${today.getHours().toString().padStart(2, '0')}:${today.getMinutes().toString().padStart(2, '0')}`;
+  const todayClasses = todayClassesAll.filter(cls => cls.time >= currentTime).slice(0, 3);
+
   const recentWorkouts = mockWorkouts.slice(0, 3);
 
   const formatDate = (dateString: string) => {
@@ -48,14 +80,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <LinearGradient
-        colors={['#E8FF2B', '#F5F5F5']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 0.3 }}
-        style={styles.headerGradient}
-      />
-
+    <View style={{ flex: 1, backgroundColor: theme.backgroundRoot }}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={{
@@ -69,83 +94,72 @@ export default function HomeScreen() {
         <View style={styles.greetingSection}>
           <View style={styles.greetingRow}>
             <View style={styles.greetingText}>
-              <ThemedText type="body" style={{ color: '#666' }}>
+              <ThemedText type="body" style={{ color: theme.textSecondary }}>
                 Bem-vindo de volta,
               </ThemedText>
-              <ThemedText type="h2" style={{ color: '#000' }}>
+              <ThemedText type="h2" style={{ color: theme.text }}>
                 {user?.fullName || "Membro"}
               </ThemedText>
             </View>
             <Pressable style={styles.avatarButton}>
-              <LinearGradient
-                colors={['#E8FF2B', '#D4E828']}
-                style={styles.avatar}
-              >
-                <Feather name="user" size={24} color="#000" />
-              </LinearGradient>
+              <View style={[styles.avatar, { backgroundColor: BrandColors.primary }]}>
+                <Feather name="user" size={24} color={theme.buttonText} />
+              </View>
             </Pressable>
           </View>
         </View>
 
-        <LinearGradient
-          colors={['#1a1a1a', '#2d2d2d']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.membershipCard}
-        >
+        <View style={[styles.membershipCard, { backgroundColor: theme.backgroundDefault, borderWidth: 1, borderColor: theme.border }]}>
           <View style={styles.membershipHeader}>
             <View>
-              <ThemedText type="small" style={{ color: '#999' }}>
+              <ThemedText type="small" style={{ color: theme.textSecondary }}>
                 ID de Membro
               </ThemedText>
-              <ThemedText type="h4" style={{ color: '#fff', marginTop: 4 }}>
+              <ThemedText type="h4" style={{ color: theme.text, marginTop: 4 }}>
                 ZG-{user?.id?.padStart(6, "0") || "000001"}
               </ThemedText>
             </View>
-            <View style={[styles.tierBadge, { backgroundColor: getTierColor(user?.membershipTier || "bronze") }]}>
+            <View style={[styles.tierBadge, { backgroundColor: getTierColor(user?.membershipTier || "z-total") }]}>
               <ThemedText type="small" style={styles.tierText}>
-                {(user?.membershipTier || "bronze").toUpperCase()}
+                {getTierName(user?.membershipTier || "z-total")}
               </ThemedText>
             </View>
           </View>
           <View style={styles.membershipFooter}>
-            <Feather name="calendar" size={14} color="#999" />
-            <ThemedText type="small" style={{ color: '#999' }}>
+            <Feather name="calendar" size={14} color={theme.textSecondary} />
+            <ThemedText type="small" style={{ color: theme.textSecondary }}>
               Válido até {user?.membershipExpiry || "N/A"}
             </ThemedText>
           </View>
-        </LinearGradient>
+        </View>
 
         <View style={styles.section}>
-          <ThemedText type="h4" style={[styles.sectionTitle, { color: '#000' }]}>
+          <ThemedText type="h4" style={[styles.sectionTitle, { color: theme.text }]}>
             Ações Rápidas
           </ThemedText>
           <View style={styles.quickActionsRow}>
             {quickActions.map((action, index) => {
-              const gradients = [
-                ['#E8FF2B', '#D4E828'],
-                ['#FFE82B', '#FFD700'],
-                ['#2BE8E8', '#1BC5C5'],
+              const colors = [
+                BrandColors.primary,
+                BrandColors.warning,
+                BrandColors.success,
               ];
               return (
                 <Pressable
                   key={action.id}
                   style={({ pressed }) => [
                     styles.quickActionButton,
-                    { opacity: pressed ? 0.7 : 1 },
+                    { opacity: pressed ? 0.7 : 1, backgroundColor: colors[index % colors.length] },
                   ]}
                 >
-                  <LinearGradient
-                    colors={gradients[index % gradients.length]}
-                    style={styles.quickActionGradient}
-                  >
+                  <View style={styles.quickActionGradient}>
                     <View style={styles.quickActionIcon}>
-                      <Feather name={action.icon as any} size={24} color="#000" />
+                      <Feather name={action.icon as any} size={24} color={theme.buttonText} />
                     </View>
-                    <ThemedText type="small" style={styles.quickActionLabel}>
+                    <ThemedText type="small" style={[styles.quickActionLabel, { color: theme.buttonText }]}>
                       {action.label}
                     </ThemedText>
-                  </LinearGradient>
+                  </View>
                 </Pressable>
               );
             })}
@@ -154,64 +168,78 @@ export default function HomeScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <ThemedText type="h4" style={{ color: '#000' }}>Aulas de Hoje</ThemedText>
+            <View>
+              <ThemedText type="h4" style={{ color: theme.text }}>Próximas Aulas de Hoje</ThemedText>
+              <ThemedText type="small" style={{ color: theme.textSecondary, marginTop: 2 }}>
+                {todayName}
+              </ThemedText>
+            </View>
             <Pressable style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
-              <ThemedText type="link" style={{ color: BrandColors.primary, fontWeight: '600' }}>
+              <ThemedText type="link" style={{ color: theme.link, fontWeight: '600' }}>
                 Ver todas
               </ThemedText>
             </Pressable>
           </View>
           <View style={styles.classesContainer}>
-            {todayClasses.map((gymClass) => (
-              <Pressable
-                key={gymClass.id}
-                style={({ pressed }) => [
-                  styles.classCard,
-                  { opacity: pressed ? 0.7 : 1 },
-                ]}
-              >
-                <View style={styles.classTimeColumn}>
-                  <ThemedText type="h4" style={{ color: BrandColors.primary, fontWeight: '700' }}>
-                    {gymClass.time}
-                  </ThemedText>
-                  <ThemedText type="small" style={{ color: '#666' }}>
-                    {gymClass.duration} min
-                  </ThemedText>
-                </View>
-                <View style={styles.classDetails}>
-                  <ThemedText type="h4" numberOfLines={1} style={{ color: '#000', fontWeight: '600' }}>
-                    {gymClass.name}
-                  </ThemedText>
-                  <View style={styles.classInstructor}>
-                    <Feather name="user" size={12} color="#666" />
-                    <ThemedText type="small" style={{ color: '#666' }}>
-                      {gymClass.instructor}
+            {todayClasses.length > 0 ? (
+              todayClasses.map((gymClass) => (
+                <Pressable
+                  key={gymClass.id}
+                  style={({ pressed }) => [
+                    styles.classCard,
+                    { opacity: pressed ? 0.7 : 1, backgroundColor: theme.backgroundDefault },
+                  ]}
+                >
+                  <View style={styles.classTimeColumn}>
+                    <ThemedText type="h4" style={{ color: theme.primary, fontWeight: '700' }}>
+                      {gymClass.time}
+                    </ThemedText>
+                    <ThemedText type="small" style={{ color: theme.textSecondary }}>
+                      {gymClass.duration} min
                     </ThemedText>
                   </View>
-                </View>
-                {gymClass.isBooked ? (
-                  <View style={styles.bookedBadge}>
-                    <ThemedText type="small" style={{ color: BrandColors.success, fontWeight: "700" }}>
-                      Reservado
+                  <View style={styles.classDetails}>
+                    <ThemedText type="h4" numberOfLines={1} style={{ color: theme.text, fontWeight: '600' }}>
+                      {gymClass.name}
                     </ThemedText>
+                    <View style={styles.classInstructor}>
+                      <Feather name="user" size={12} color={theme.textSecondary} />
+                      <ThemedText type="small" style={{ color: theme.textSecondary }}>
+                        {gymClass.instructor}
+                      </ThemedText>
+                    </View>
                   </View>
-                ) : (
-                  <View style={styles.spotsContainer}>
-                    <ThemedText type="small" style={{ color: '#666', fontWeight: '500' }}>
-                      {gymClass.spotsAvailable} lugares
-                    </ThemedText>
-                  </View>
-                )}
-              </Pressable>
-            ))}
+                  {gymClass.isBooked ? (
+                    <View style={[styles.bookedBadge, { backgroundColor: theme.success + '20' }]}>
+                      <ThemedText type="small" style={{ color: theme.success, fontWeight: "700" }}>
+                        Reservado
+                      </ThemedText>
+                    </View>
+                  ) : (
+                    <View style={styles.spotsContainer}>
+                      <ThemedText type="small" style={{ color: theme.textSecondary, fontWeight: '500' }}>
+                        {gymClass.spotsAvailable} lugares
+                      </ThemedText>
+                    </View>
+                  )}
+                </Pressable>
+              ))
+            ) : (
+              <View style={[styles.emptyStateCard, { backgroundColor: theme.backgroundDefault }]}>
+                <Feather name="calendar-x" size={48} color={theme.textSecondary} />
+                <ThemedText type="body" style={{ color: theme.textSecondary, marginTop: Spacing.md }}>
+                  Sem aulas programadas para hoje
+                </ThemedText>
+              </View>
+            )}
           </View>
         </View>
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <ThemedText type="h4" style={{ color: '#000' }}>Atividade Recente</ThemedText>
+            <ThemedText type="h4" style={{ color: theme.text }}>Atividade Recente</ThemedText>
             <Pressable style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
-              <ThemedText type="link" style={{ color: BrandColors.primary, fontWeight: '600' }}>
+              <ThemedText type="link" style={{ color: theme.link, fontWeight: '600' }}>
                 Ver tudo
               </ThemedText>
             </Pressable>
@@ -222,23 +250,23 @@ export default function HomeScreen() {
                 key={workout.id}
                 style={({ pressed }) => [
                   styles.activityCard,
-                  { opacity: pressed ? 0.7 : 1 },
+                  { opacity: pressed ? 0.7 : 1, backgroundColor: theme.backgroundDefault },
                 ]}
               >
-                <View style={styles.activityIcon}>
-                  <Feather name="activity" size={20} color="#000" />
+                <View style={[styles.activityIcon, { backgroundColor: theme.backgroundTertiary }]}>
+                  <Feather name="activity" size={20} color={theme.text} />
                 </View>
                 <View style={styles.activityDetails}>
-                  <ThemedText type="body" style={{ fontWeight: "600", color: '#000' }} numberOfLines={1}>
+                  <ThemedText type="body" style={{ fontWeight: "600", color: theme.text }} numberOfLines={1}>
                     {workout.name}
                   </ThemedText>
-                  <ThemedText type="small" style={{ color: '#666' }}>
+                  <ThemedText type="small" style={{ color: theme.textSecondary }}>
                     {formatDate(workout.date)} - {workout.duration} min
                   </ThemedText>
                 </View>
-                <View style={styles.activityCalories}>
-                  <Feather name="zap" size={16} color={BrandColors.warning} />
-                  <ThemedText type="small" style={{ color: '#000', fontWeight: '600' }}>
+                <View style={[styles.activityCalories, { backgroundColor: theme.warning + '20' }]}>
+                  <Feather name="zap" size={16} color={theme.warning} />
+                  <ThemedText type="small" style={{ color: theme.text, fontWeight: '600' }}>
                     {workout.caloriesBurned}
                   </ThemedText>
                 </View>
@@ -252,14 +280,6 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerGradient: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 300,
-    zIndex: -1,
-  },
   container: {
     flex: 1,
   },
@@ -310,7 +330,6 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.full,
   },
   tierText: {
-    color: "#000000",
     fontWeight: "700",
     fontSize: 11,
   },
@@ -355,7 +374,6 @@ const styles = StyleSheet.create({
   },
   quickActionLabel: {
     fontWeight: "700",
-    color: '#000',
     fontSize: 12,
     textAlign: 'center',
   },
@@ -367,7 +385,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: Spacing.lg,
     borderRadius: BorderRadius.lg,
-    backgroundColor: '#fff',
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
@@ -391,7 +408,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.full,
-    backgroundColor: `${BrandColors.success}20`,
   },
   spotsContainer: {},
   activityContainer: {
@@ -402,7 +418,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: Spacing.lg,
     borderRadius: BorderRadius.lg,
-    backgroundColor: '#fff',
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
@@ -416,7 +431,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: Spacing.md,
-    backgroundColor: '#E8FF2B',
   },
   activityDetails: {
     flex: 1,
@@ -425,9 +439,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.xs,
-    backgroundColor: '#FFF9E6',
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.full,
+  },
+  emptyStateCard: {
+    padding: Spacing.xl,
+    borderRadius: BorderRadius.lg,
+    alignItems: "center",
   },
 });

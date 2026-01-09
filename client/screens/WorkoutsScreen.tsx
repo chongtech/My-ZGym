@@ -30,20 +30,16 @@ export default function WorkoutsScreen() {
     : mockWorkoutRoutines.filter((w) => w.category === selectedCategory);
 
   const renderWorkoutCard = ({ item }: { item: WorkoutRoutine }) => {
-    const exerciseDetails = item.exercises.map((ex) =>
-      mockExercises.find((e) => e.id === ex.exerciseId)
-    ).filter(Boolean);
-
     const difficultyColor =
       item.difficulty === "beginner" ? BrandColors.success :
       item.difficulty === "intermediate" ? BrandColors.accent :
       BrandColors.error;
 
     return (
-      <ThemedView style={[styles.workoutCard, { backgroundColor: theme.card }]}>
+      <ThemedView style={[styles.workoutCard, { backgroundColor: theme.backgroundDefault }]}>
         <View style={styles.workoutHeader}>
           <View style={{ flex: 1 }}>
-            <ThemedText type="subtitle" style={styles.workoutName}>
+            <ThemedText type="h4" style={styles.workoutName}>
               {item.name}
             </ThemedText>
             <ThemedText type="caption" style={{ color: theme.textSecondary, marginTop: 4 }}>
@@ -111,7 +107,7 @@ export default function WorkoutsScreen() {
         <Pressable
           style={[styles.startButton, { backgroundColor: BrandColors.primary }]}
         >
-          <ThemedText type="button" style={{ color: "#FFF" }}>
+          <ThemedText type="button" style={{ color: theme.backgroundRoot }}>
             Ver Detalhes
           </ThemedText>
         </Pressable>
@@ -152,7 +148,7 @@ export default function WorkoutsScreen() {
                     {
                       backgroundColor: selectedCategory === item.key
                         ? BrandColors.primary
-                        : theme.card,
+                        : theme.backgroundDefault,
                     },
                   ]}
                 >
@@ -160,7 +156,7 @@ export default function WorkoutsScreen() {
                     type="caption"
                     style={{
                       color: selectedCategory === item.key
-                        ? "#FFF"
+                        ? theme.backgroundRoot
                         : theme.text,
                       fontWeight: "600",
                     }}
@@ -213,7 +209,7 @@ const styles = StyleSheet.create({
     padding: Spacing.lg,
     borderRadius: BorderRadius.md,
     marginBottom: Spacing.md,
-    shadowColor: "#000",
+    shadowColor: "rgba(0,0,0,0.1)",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
@@ -239,7 +235,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
     paddingBottom: Spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: "#E0E0E0",
+    borderBottomColor: "rgba(0,0,0,0.05)",
   },
   metaItem: {
     flexDirection: "row",
@@ -269,6 +265,6 @@ const styles = StyleSheet.create({
   emptyState: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: Spacing.xxl * 2,
+    paddingVertical: Spacing["3xl"],
   },
 });

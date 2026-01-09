@@ -23,86 +23,117 @@ const getDifficultyColor = (difficulty: string) => {
   }
 };
 
+// Check if class time has passed (considering the selected day)
+const isClassTimePassed = (classTime: string, classDayOfWeek: string | undefined, selectedDayIndex: number): boolean => {
+  if (classTime === "A definir") return false; // Classes with undefined time are always bookable
+  if (!classDayOfWeek) return false; // If no day specified, assume it's bookable
+
+  const now = new Date();
+  const currentDayIndex = now.getDay() === 0 ? 6 : now.getDay() - 1; // Convert to our format (0=Monday)
+
+  // If the selected day is not today, the class hasn't passed yet
+  if (selectedDayIndex !== currentDayIndex) {
+    return false;
+  }
+
+  // If it's today, check if the time has passed
+  const [hours, minutes] = classTime.split(":").map(Number);
+  const classDateTime = new Date();
+  classDateTime.setHours(hours, minutes, 0, 0);
+
+  return now > classDateTime;
+};
+
 // Memoized class card component to prevent unnecessary re-renders
-const ClassCard = React.memo(({ item, theme, onBook }: { item: GymClass; theme: any; onBook: (gymClass: GymClass) => void }) => (
-  <Pressable
-    style={({ pressed }) => [
-      styles.classCard,
-      { backgroundColor: theme.backgroundDefault, opacity: pressed ? 0.7 : 1 },
-    ]}
-  >
-    <View style={styles.classHeader}>
-      <View style={styles.classTime}>
-        <ThemedText type="h3" style={{ color: BrandColors.primary }}>
-          {item.time}
-        </ThemedText>
-        <ThemedText type="small" style={{ color: theme.textSecondary }}>
-          {item.duration} min
-        </ThemedText>
-      </View>
-      <View
-        style={[
-          styles.difficultyBadge,
-          { backgroundColor: `${getDifficultyColor(item.difficulty)}20` },
-        ]}
-      >
-        <ThemedText
-          type="small"
-          style={{ color: getDifficultyColor(item.difficulty), fontWeight: "600" }}
-        >
-          {item.difficulty === "beginner" ? "Iniciante" : item.difficulty === "intermediate" ? "Intermédio" : "Avançado"}
-        </ThemedText>
-      </View>
-    </View>
+const ClassCard = React.memo(({ item, theme, onBook, selectedDayIndex }: { item: GymClass; theme: any; onBook: (gymClass: GymClass) => void; selectedDayIndex: number }) => {
+  const timePassed = isClassTimePassed(item.time, item.dayOfWeek, selectedDayIndex);
 
-    <View style={styles.classInfo}>
-      <ThemedText type="h4">{item.name}</ThemedText>
-      <View style={styles.instructorRow}>
-        <View style={[styles.instructorAvatar, { backgroundColor: theme.backgroundSecondary }]}>
-          <Feather name="user" size={14} color={theme.textSecondary} />
-        </View>
-        <ThemedText type="body" style={{ color: theme.textSecondary }}>
-          {item.instructor}
-        </ThemedText>
-      </View>
-    </View>
-
-    <View style={styles.classFooter}>
-      <View style={styles.spotsInfo}>
-        <Feather name="users" size={14} color={theme.textSecondary} />
-        <ThemedText type="small" style={{ color: theme.textSecondary }}>
-          {item.spotsAvailable}/{item.totalSpots} lugares
-        </ThemedText>
-      </View>
-      {item.isBooked ? (
-        <View style={[styles.bookedButton, { backgroundColor: `${BrandColors.success}15` }]}>
-          <Feather name="check" size={16} color={BrandColors.success} />
-          <ThemedText type="button" style={{ color: BrandColors.success }}>
-            Reservado
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.classCard,
+        { backgroundColor: theme.backgroundDefault, opacity: pressed ? 0.7 : 1 },
+      ]}
+    >
+      <View style={styles.classHeader}>
+        <View style={styles.classTime}>
+          <ThemedText type="h3" style={{ color: timePassed ? theme.textSecondary : BrandColors.primary }}>
+            {item.time}
+          </ThemedText>
+          <ThemedText type="small" style={{ color: theme.textSecondary }}>
+            {item.duration} min
           </ThemedText>
         </View>
-      ) : item.spotsAvailable > 0 ? (
-        <Pressable
-          style={({ pressed }) => [
-            styles.bookButton,
-            { backgroundColor: BrandColors.primary, opacity: pressed ? 0.7 : 1 },
+        <View
+          style={[
+            styles.difficultyBadge,
+            { backgroundColor: `${getDifficultyColor(item.difficulty)}20` },
           ]}
-          onPress={() => onBook(item)}
         >
-          <ThemedText type="button" style={{ color: "#FFFFFF" }}>
-            Reservar
-          </ThemedText>
-        </Pressable>
-      ) : (
-        <View style={[styles.fullButton, { backgroundColor: theme.backgroundSecondary }]}>
-          <ThemedText type="button" style={{ color: theme.textSecondary }}>
-            Cheio
+          <ThemedText
+            type="small"
+            style={{ color: getDifficultyColor(item.difficulty), fontWeight: "600" }}
+          >
+            {item.difficulty === "beginner" ? "Iniciante" : item.difficulty === "intermediate" ? "Intermédio" : "Avançado"}
           </ThemedText>
         </View>
-      )}
-    </View>
-  </Pressable>
-));
+      </View>
+
+      <View style={styles.classInfo}>
+        <ThemedText type="h4">{item.name}</ThemedText>
+        <View style={styles.instructorRow}>
+          <View style={[styles.instructorAvatar, { backgroundColor: theme.backgroundSecondary }]}>
+            <Feather name="user" size={14} color={theme.textSecondary} />
+          </View>
+          <ThemedText type="body" style={{ color: theme.textSecondary }}>
+            {item.instructor}
+          </ThemedText>
+        </View>
+      </View>
+
+      <View style={styles.classFooter}>
+        <View style={styles.spotsInfo}>
+          <Feather name="users" size={14} color={theme.textSecondary} />
+          <ThemedText type="small" style={{ color: theme.textSecondary }}>
+            {item.spotsAvailable}/{item.totalSpots} lugares
+          </ThemedText>
+        </View>
+        {item.isBooked ? (
+          <View style={[styles.bookedButton, { backgroundColor: `${BrandColors.success}15` }]}>
+            <Feather name="check" size={16} color={BrandColors.success} />
+            <ThemedText type="button" style={{ color: BrandColors.success }}>
+              Reservado
+            </ThemedText>
+          </View>
+        ) : timePassed ? (
+          <View style={[styles.fullButton, { backgroundColor: theme.backgroundSecondary }]}>
+            <ThemedText type="button" style={{ color: theme.textSecondary }}>
+              Terminado
+            </ThemedText>
+          </View>
+        ) : item.spotsAvailable > 0 ? (
+          <Pressable
+            style={({ pressed }) => [
+              styles.bookButton,
+              { backgroundColor: BrandColors.primary, opacity: pressed ? 0.7 : 1 },
+            ]}
+            onPress={() => onBook(item)}
+          >
+            <ThemedText type="button" style={{ color: theme.backgroundRoot }}>
+              Reservar
+            </ThemedText>
+          </Pressable>
+        ) : (
+          <View style={[styles.fullButton, { backgroundColor: theme.backgroundSecondary }]}>
+            <ThemedText type="button" style={{ color: theme.textSecondary }}>
+              Cheio
+            </ThemedText>
+          </View>
+        )}
+      </View>
+    </Pressable>
+  );
+});
 
 export default function ScheduleScreen() {
   const insets = useSafeAreaInsets();
@@ -110,10 +141,39 @@ export default function ScheduleScreen() {
   const tabBarHeight = useBottomTabBarHeight();
   const { theme } = useTheme();
 
-  const [selectedDay, setSelectedDay] = useState(0);
+  // Get current day of week (0 = Monday, 6 = Sunday)
+  const getCurrentDayIndex = () => {
+    const today = new Date().getDay();
+    // JavaScript getDay(): 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    // We need: 0 = Monday, 1 = Tuesday, ..., 6 = Sunday
+    return today === 0 ? 6 : today - 1;
+  };
+
+  const [selectedDay, setSelectedDay] = useState(getCurrentDayIndex());
   const [selectedCategory, setSelectedCategory] = useState("all");
 
+  // Map day index to full day name in Portuguese
+  const dayIndexToDayName = (index: number): string => {
+    const days = [
+      "Segunda-feira",
+      "Terça-feira",
+      "Quarta-feira",
+      "Quinta-feira",
+      "Sexta-feira",
+      "Sábado",
+      "Domingo",
+    ];
+    return days[index];
+  };
+
   const filteredClasses = mockClasses.filter((gymClass) => {
+    // Filter by day
+    const selectedDayName = dayIndexToDayName(selectedDay);
+    if (gymClass.dayOfWeek && gymClass.dayOfWeek !== selectedDayName) {
+      return false;
+    }
+
+    // Filter by category
     if (selectedCategory === "all") return true;
     return gymClass.category === selectedCategory;
   });
@@ -123,8 +183,8 @@ export default function ScheduleScreen() {
   }, []);
 
   const renderClassItem = useCallback(({ item }: { item: GymClass }) => (
-    <ClassCard item={item} theme={theme} onBook={handleBookClass} />
-  ), [theme, handleBookClass]);
+    <ClassCard item={item} theme={theme} onBook={handleBookClass} selectedDayIndex={selectedDay} />
+  ), [theme, handleBookClass, selectedDay]);
 
   const keyExtractor = useCallback((item: GymClass) => item.id, []);
 
@@ -151,7 +211,7 @@ export default function ScheduleScreen() {
               <ThemedText
                 type="small"
                 style={{
-                  color: selectedDay === index ? "#FFFFFF" : theme.textSecondary,
+                  color: selectedDay === index ? theme.backgroundRoot : theme.textSecondary,
                   fontWeight: "500",
                 }}
               >
@@ -160,7 +220,7 @@ export default function ScheduleScreen() {
               <ThemedText
                 type="h4"
                 style={{
-                  color: selectedDay === index ? "#FFFFFF" : theme.text,
+                  color: selectedDay === index ? theme.backgroundRoot : theme.text,
                 }}
               >
                 {6 + index}
@@ -193,7 +253,7 @@ export default function ScheduleScreen() {
               <ThemedText
                 type="small"
                 style={{
-                  color: selectedCategory === category.key ? "#FFFFFF" : theme.text,
+                  color: selectedCategory === category.key ? theme.backgroundRoot : theme.text,
                   fontWeight: "500",
                 }}
               >

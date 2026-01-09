@@ -7,6 +7,8 @@ import { Platform, StyleSheet } from "react-native";
 import HomeStackNavigator from "@/navigation/HomeStackNavigator";
 import ScheduleStackNavigator from "@/navigation/ScheduleStackNavigator";
 import WorkoutsStackNavigator from "@/navigation/WorkoutsStackNavigator";
+import AssessmentsStackNavigator from "@/navigation/AssessmentsStackNavigator";
+import ShopStackNavigator from "@/navigation/ShopStackNavigator";
 import ProgressStackNavigator from "@/navigation/ProgressStackNavigator";
 import ProfileStackNavigator from "@/navigation/ProfileStackNavigator";
 import { useTheme } from "@/hooks/useTheme";
@@ -16,6 +18,8 @@ export type MainTabParamList = {
   HomeTab: undefined;
   ScheduleTab: undefined;
   WorkoutsTab: undefined;
+  AssessmentsTab: undefined;
+  ShopTab: undefined;
   ProgressTab: undefined;
   ProfileTab: undefined;
 };
@@ -78,6 +82,26 @@ export default function MainTabNavigator() {
           title: "Treinos",
           tabBarIcon: ({ color, size }) => (
             <Feather name="clipboard" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="AssessmentsTab"
+        component={AssessmentsStackNavigator}
+        options={{
+          title: "Avaliações",
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="activity" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ShopTab"
+        component={ShopStackNavigator}
+        options={{
+          title: "Loja",
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="shopping-bag" size={size} color={color} />
           ),
         }}
       />

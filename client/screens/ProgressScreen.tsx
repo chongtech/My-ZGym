@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     width: 3,
     height: 3,
     borderRadius: 1.5,
-    backgroundColor: "#999",
+    backgroundColor: "rgba(0,0,0,0.3)",
     marginHorizontal: Spacing.sm,
   },
   workoutCalories: {

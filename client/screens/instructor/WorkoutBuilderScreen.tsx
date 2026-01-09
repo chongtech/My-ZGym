@@ -10,6 +10,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
+import { ClientSelector } from "@/components/instructor/ClientSelector";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, BrandColors } from "@/constants/theme";
 import { mockWorkoutRoutines, mockExercises } from "@/data/mockData";
@@ -32,12 +33,13 @@ export default function WorkoutBuilderScreen() {
 
   const [name, setName] = useState(existingRoutine?.name || "");
   const [description, setDescription] = useState(existingRoutine?.description || "");
+  const [selectedClients, setSelectedClients] = useState<string[]>([]);
 
   const selectedExercises = existingRoutine
     ? existingRoutine.exercises.map((ex) => {
-        const exercise = mockExercises.find((e) => e.id === ex.exerciseId);
-        return { ...ex, exerciseName: exercise?.name || "Exercício" };
-      })
+      const exercise = mockExercises.find((e) => e.id === ex.exerciseId);
+      return { ...ex, exerciseName: exercise?.name || "Exercício" };
+    })
     : [];
 
   return (
@@ -106,8 +108,8 @@ export default function WorkoutBuilderScreen() {
               // Navigate to exercise library (will implement modal)
             }}
           >
-            <Feather name="plus" size={16} color="#fff" />
-            <ThemedText type="small" style={{ color: "#fff", fontWeight: "600" }}>
+            <Feather name="plus" size={16} color={theme.text} />
+            <ThemedText type="small" style={{ color: theme.text, fontWeight: "600" }}>
               Adicionar
             </ThemedText>
           </Pressable>
@@ -121,8 +123,8 @@ export default function WorkoutBuilderScreen() {
               style={{ marginBottom: Spacing.md }}
             >
               <View style={styles.exerciseHeader}>
-                <View style={styles.orderBadge}>
-                  <ThemedText type="small" style={{ fontWeight: "600" }}>
+                <View style={[styles.orderBadge, { backgroundColor: BrandColors.primary }]}>
+                  <ThemedText type="small" style={{ fontWeight: "600", color: theme.text }}>
                     {index + 1}
                   </ThemedText>
                 </View>
@@ -133,7 +135,7 @@ export default function WorkoutBuilderScreen() {
                   </ThemedText>
                 </View>
                 <Pressable>
-                  <Feather name="trash-2" size={20} color="#EF4444" />
+                  <Feather name="trash-2" size={20} color={BrandColors.error} />
                 </Pressable>
               </View>
             </Card>
@@ -151,11 +153,34 @@ export default function WorkoutBuilderScreen() {
         )}
       </View>
 
+      <Card elevation={1} style={{ marginBottom: Spacing.lg }}>
+        <ThemedText type="h4" style={{ marginBottom: Spacing.md }}>
+          Atribuir a Clientes
+        </ThemedText>
+        <ThemedText type="small" style={{ color: theme.textSecondary, marginBottom: Spacing.md }}>
+          Selecione os clientes que irão receber este programa de treino
+        </ThemedText>
+        <ClientSelector
+          selectedClients={selectedClients}
+          onToggleClient={(clientId) => {
+            setSelectedClients((prev) =>
+              prev.includes(clientId)
+                ? prev.filter((id) => id !== clientId)
+                : [...prev, clientId]
+            );
+          }}
+        />
+      </Card>
+
       <Pressable
         style={[styles.saveButton, { backgroundColor: BrandColors.primary }]}
-        onPress={() => navigation.goBack()}
+        onPress={() => {
+          // TODO: Save routine with assigned clients
+          console.log("Saving routine:", { name, description, selectedClients });
+          navigation.goBack();
+        }}
       >
-        <ThemedText type="body" style={{ color: "#fff", fontWeight: "600" }}>
+        <ThemedText type="body" style={{ color: theme.text, fontWeight: "600" }}>
           {existingRoutine ? "Guardar Alterações" : "Criar Rotina"}
         </ThemedText>
       </Pressable>
@@ -206,12 +231,11 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "#E8FF2B",
     alignItems: "center",
     justifyContent: "center",
   },
   emptyState: {
-    padding: Spacing.xxl,
+    padding: Spacing.xl * 2,
     borderRadius: BorderRadius["2xl"],
     alignItems: "center",
   },

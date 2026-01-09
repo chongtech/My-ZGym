@@ -4,7 +4,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 
 import { ThemedText } from "@/components/ThemedText";
 import { useTheme } from "@/hooks/useTheme";
@@ -27,14 +26,7 @@ export default function InstructorDashboardScreen() {
   ];
 
   return (
-    <View style={{ flex: 1 }}>
-      <LinearGradient
-        colors={['#E8FF2B', '#F5F5F5']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 0.3 }}
-        style={styles.headerGradient}
-      />
-
+    <View style={{ flex: 1, backgroundColor: theme.backgroundRoot }}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={{
@@ -46,13 +38,13 @@ export default function InstructorDashboardScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.greetingSection}>
-          <ThemedText type="body" style={{ color: '#666' }}>
+          <ThemedText type="body" style={{ color: theme.textSecondary }}>
             Olá,
           </ThemedText>
-          <ThemedText type="h2" style={{ color: '#000' }}>
+          <ThemedText type="h2" style={{ color: theme.text }}>
             {user?.fullName || "Instrutor"}
           </ThemedText>
-          <ThemedText type="small" style={{ color: '#999', marginTop: 4 }}>
+          <ThemedText type="small" style={{ color: theme.textSecondary, marginTop: 4 }}>
             Tens {mockTodaySessions.length} sessões agendadas para hoje
           </ThemedText>
         </View>
@@ -78,7 +70,7 @@ export default function InstructorDashboardScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <ThemedText type="h4" style={{ color: '#000' }}>
+            <ThemedText type="h4" style={{ color: theme.text }}>
               Sessões de Hoje
             </ThemedText>
             <Pressable>
@@ -140,31 +132,21 @@ export default function InstructorDashboardScreen() {
         </View>
 
         <View style={styles.section}>
-          <ThemedText type="h4" style={{ color: '#000', marginBottom: Spacing.md }}>
+          <ThemedText type="h4" style={{ color: theme.text, marginBottom: Spacing.md }}>
             Ações Rápidas
           </ThemedText>
           <View style={styles.quickActionsRow}>
-            <Pressable style={styles.quickActionButton}>
-              <LinearGradient
-                colors={['#E8FF2B', '#D4E828']}
-                style={styles.quickActionGradient}
-              >
-                <Feather name="plus-circle" size={24} color="#000" />
-                <ThemedText type="small" style={styles.quickActionLabel}>
-                  Criar Rotina
-                </ThemedText>
-              </LinearGradient>
+            <Pressable style={[styles.quickActionButton, { backgroundColor: BrandColors.primary }]}>
+              <Feather name="plus-circle" size={24} color={theme.text} />
+              <ThemedText type="small" style={[styles.quickActionLabel, { color: theme.text }]}>
+                Criar Rotina
+              </ThemedText>
             </Pressable>
-            <Pressable style={styles.quickActionButton}>
-              <LinearGradient
-                colors={['#FFE82B', '#FFD700']}
-                style={styles.quickActionGradient}
-              >
-                <Feather name="calendar" size={24} color="#000" />
-                <ThemedText type="small" style={styles.quickActionLabel}>
-                  Ver Agenda
-                </ThemedText>
-              </LinearGradient>
+            <Pressable style={[styles.quickActionButton, { backgroundColor: BrandColors.primary }]}>
+              <Feather name="calendar" size={24} color={theme.text} />
+              <ThemedText type="small" style={[styles.quickActionLabel, { color: theme.text }]}>
+                Ver Agenda
+              </ThemedText>
             </Pressable>
           </View>
         </View>
@@ -176,13 +158,6 @@ export default function InstructorDashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  headerGradient: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 200,
   },
   greetingSection: {
     marginBottom: Spacing.xl,
@@ -253,15 +228,12 @@ const styles = StyleSheet.create({
   },
   quickActionButton: {
     flex: 1,
-  },
-  quickActionGradient: {
     padding: Spacing.lg,
     borderRadius: BorderRadius['2xl'],
     alignItems: 'center',
     gap: Spacing.sm,
   },
   quickActionLabel: {
-    color: '#000',
     fontWeight: '600',
   },
 });

@@ -1,9 +1,9 @@
 # My-ZGym - Product Requirements Document (PRD)
 
-**Version:** 1.0  
-**Last Updated:** December 9, 2025  
-**Author:** ChongTechnologies  
-**Status:** In Development
+**Version:** 3.0
+**Last Updated:** January 6, 2026
+**Author:** ChongTechnologies
+**Status:** In Development - Core Features Complete
 
 ---
 
@@ -36,18 +36,20 @@
 
 ### 1.2 Key Objectives
 
-- **Members**: Simplified class booking, workout tracking, and progress visualization
-- **Instructors**: Efficient class management and member interaction (Tablet UI)
-- **Managers**: Comprehensive gym operations oversight (Web Panel)
+- **Members**: Personalized onboarding, training programs, workout tracking, progress visualization, supplement shopping
+- **Instructors**: Complete client management, workout/program creation, physical assessments, and schedule management (Mobile App)
+- **Managers**: Comprehensive gym operations oversight (Web Panel - Planned)
+- **E-commerce**: Integrated shop for supplements, apparel, equipment, and accessories
 
 ### 1.3 Business Goals
 
 | Goal | Target | Timeline |
 |------|--------|----------|
-| User Acquisition | 1,000 active members | Q2 2025 |
-| Daily Active Users | 40% of registered users | Q3 2025 |
-| Class Booking Rate | 75% utilization | Q4 2025 |
-| User Retention | 85% monthly retention | Q4 2025 |
+| User Acquisition | 1,000 active members | Q2 2026 |
+| Daily Active Users | 40% of registered users | Q3 2026 |
+| Class Booking Rate | 75% utilization | Q4 2026 |
+| User Retention | 85% monthly retention | Q4 2026 |
+| E-commerce Revenue | $10k/month supplement sales | Q4 2026 |
 
 ---
 
@@ -69,10 +71,10 @@ To create the most intuitive and comprehensive gym companion app that:
 
 | Stakeholder | Value Delivered |
 |-------------|-----------------|
-| **Members** | Easy booking, progress tracking, personalized recommendations |
-| **Instructors** | Class management, attendance tracking, member insights |
-| **Managers** | Operations dashboard, analytics, member management |
-| **Gym Business** | Increased engagement, reduced churn, operational efficiency |
+| **Members** | Personalized onboarding, training programs, workout tracking, progress visualization, supplement shopping |
+| **Instructors** | Client management, workout/program builder, physical assessments, schedule oversight |
+| **Managers** | Operations dashboard, analytics, member management (Planned) |
+| **Gym Business** | Increased engagement, reduced churn, operational efficiency, additional revenue stream |
 
 ---
 
@@ -152,16 +154,31 @@ To create the most intuitive and comprehensive gym companion app that:
 |----------|---------|-----------|--------|
 | P0 | Authentication (Email, Social) | All | 🟡 In Progress |
 | P0 | Profile Management | All | ✅ Complete |
+| P0 | Member Onboarding Flow (10 screens) | Members | ✅ Complete |
 | P0 | Dashboard | Members | ✅ Complete |
+| P0 | Instructor Dashboard | Instructors | ✅ Complete |
+| P0 | Client Management | Instructors | ✅ Complete |
+| P0 | Workout Routine Builder | Instructors | ✅ Complete |
+| P0 | Training Program Builder | Instructors | ✅ Complete |
+| P0 | Physical Assessment System | Instructors | ✅ Complete |
+| P0 | Program Assignment | Instructors | ✅ Complete |
+| P0 | Member Training Plan View | Members | ✅ Complete |
+| P0 | Exercise Library (32+ exercises) | All | ✅ Complete |
 | P0 | Class Schedule View | Members | ✅ Complete |
-| P1 | Class Booking | Members | 🔴 Planned |
+| P0 | E-commerce Shop | Members | ✅ Complete |
+| P0 | Product Catalog & Categories | Members | ✅ Complete |
+| P0 | Shopping Cart & Checkout | Members | ✅ Complete |
+| P1 | Instructor Schedule View | Instructors | ✅ Complete |
 | P1 | Progress Tracking | Members | ✅ Complete |
+| P1 | Class Booking | Members | 🔴 Planned |
 | P1 | Workout Logging | Members | 🔴 Planned |
 | P2 | Notifications | All | 🟡 In Progress |
 | P2 | QR Check-in | Members | 🟡 In Progress |
 | P2 | Achievement System | Members | 🔴 Planned |
-| P3 | Instructor Dashboard | Instructors | 🔴 Planned |
+| P2 | Order History & Tracking | Members | 🔴 Planned |
 | P3 | Manager Web Panel | Managers | 🔴 Planned |
+| P3 | Backend API Integration | All | 🔴 Planned |
+| P3 | Payment Gateway Integration | All | 🔴 Planned |
 
 ### 5.2 Detailed Feature Specifications
 
@@ -264,10 +281,257 @@ To create the most intuitive and comprehensive gym companion app that:
 | PROF-009 | Logout | P0 |
 
 **Acceptance Criteria**:
-- [ ] Profile photo cropped to circle
-- [ ] Required fields: Full name, phone, emergency contact
-- [ ] Theme changes apply immediately
-- [ ] Delete requires double confirmation
+- [x] Profile photo cropped to circle
+- [x] Required fields: Full name, phone, emergency contact
+- [x] Theme changes apply immediately
+- [x] Delete requires double confirmation
+
+#### 5.2.6 Instructor Dashboard
+
+**Description**: Central hub for instructors showing key metrics and today's schedule.
+
+| Requirement ID | Description | Priority |
+|----------------|-------------|----------|
+| INST-DASH-001 | Display instructor name and greeting | P0 |
+| INST-DASH-002 | Show total clients count | P0 |
+| INST-DASH-003 | Show active routines count | P0 |
+| INST-DASH-004 | Show sessions this week | P0 |
+| INST-DASH-005 | Show check-ins today | P0 |
+| INST-DASH-006 | Display today's scheduled sessions | P0 |
+| INST-DASH-007 | Gradient header design | P1 |
+
+**Acceptance Criteria**:
+- [x] Dashboard loads within 2 seconds
+- [x] All 4 stat cards displayed with icons
+- [x] Today's sessions sorted by time
+- [x] Navigation to detail screens from cards
+- [x] Gradient header (#E8FF2B to #F5F5F5)
+
+#### 5.2.7 Client Management (Instructor)
+
+**Description**: Comprehensive client management for instructors.
+
+| Requirement ID | Description | Priority |
+|----------------|-------------|----------|
+| CLIENT-001 | List all assigned clients | P0 |
+| CLIENT-002 | Display client compliance rate | P0 |
+| CLIENT-003 | Show last workout date | P0 |
+| CLIENT-004 | Display current program | P0 |
+| CLIENT-005 | View client details | P0 |
+| CLIENT-006 | Assign programs to clients | P0 |
+| CLIENT-007 | Search/filter clients | P1 |
+| CLIENT-008 | View client assessment history | P1 |
+
+**Acceptance Criteria**:
+- [x] Display 12+ clients in scrollable list
+- [x] Show membership tier badges (Gold/Silver/Bronze)
+- [x] Compliance rate visualization (65-95%)
+- [x] Client detail view with full information
+- [x] Program assignment modal with selection
+- [x] Search functionality for client filtering
+
+#### 5.2.8 Workout Routine Builder
+
+**Description**: Create and manage workout routines with exercises.
+
+| Requirement ID | Description | Priority |
+|----------------|-------------|----------|
+| ROUTINE-001 | Create new workout routine | P0 |
+| ROUTINE-002 | Add exercises from library | P0 |
+| ROUTINE-003 | Specify sets, reps, rest for each exercise | P0 |
+| ROUTINE-004 | Set routine difficulty level | P0 |
+| ROUTINE-005 | Set routine category | P0 |
+| ROUTINE-006 | Assign routine to clients | P0 |
+| ROUTINE-007 | Reorder exercises | P1 |
+| ROUTINE-008 | Preview routine before saving | P1 |
+
+**Acceptance Criteria**:
+- [x] Access to 32+ exercises library
+- [x] Exercise selection with search/filter
+- [x] Order badge for exercise sequence
+- [x] Sets, reps, rest configuration per exercise
+- [x] Difficulty: beginner/intermediate/advanced
+- [x] Categories: strength, hypertrophy, cardio, etc.
+- [x] Multi-client assignment via ClientSelector
+- [x] 8 template routines available
+
+#### 5.2.9 Training Program Builder
+
+**Description**: Create comprehensive multi-week training programs.
+
+| Requirement ID | Description | Priority |
+|----------------|-------------|----------|
+| PROGRAM-001 | Create training program | P0 |
+| PROGRAM-002 | Set program duration (weeks) | P0 |
+| PROGRAM-003 | Build weekly schedule (7 days) | P0 |
+| PROGRAM-004 | Assign routines to specific days | P0 |
+| PROGRAM-005 | Mark rest days | P0 |
+| PROGRAM-006 | Assign program to multiple clients | P0 |
+| PROGRAM-007 | Set program difficulty and category | P0 |
+| PROGRAM-008 | Edit existing programs | P1 |
+
+**Acceptance Criteria**:
+- [x] Program name and description fields
+- [x] Duration selector (weeks)
+- [x] 7-day weekly schedule builder
+- [x] Routine assignment per day
+- [x] Rest day toggle
+- [x] Multi-client assignment
+- [x] 3 template programs available
+- [x] Program stats display (duration, frequency)
+
+#### 5.2.10 Physical Assessment System
+
+**Description**: Conduct and track client physical assessments.
+
+| Requirement ID | Description | Priority |
+|----------------|-------------|----------|
+| ASSESS-001 | Create initial assessment | P0 |
+| ASSESS-002 | Create progress assessment | P0 |
+| ASSESS-003 | Record body composition (weight, BF%, muscle%) | P0 |
+| ASSESS-004 | Record body measurements (7 points) | P0 |
+| ASSESS-005 | Conduct performance tests | P0 |
+| ASSESS-006 | Add instructor notes | P0 |
+| ASSESS-007 | View assessment history | P0 |
+| ASSESS-008 | Compare progress over time | P1 |
+| ASSESS-009 | Add assessment photos | P1 |
+
+**Acceptance Criteria**:
+- [x] Differentiate initial vs progress assessment
+- [x] Body composition: weight (kg), body fat %, muscle mass %, BMI
+- [x] Measurements: chest, waist, hips, left/right arms, left/right thighs (cm)
+- [x] Performance tests: 1RM, push-ups, sit-ups, plank, flexibility, VO2 max, custom
+- [x] Text area for instructor notes and recommendations
+- [x] Client search for assessment creation
+- [x] Assessment history display per client
+- [x] Status badges (Assessed/Create)
+
+#### 5.2.11 Instructor Schedule Management
+
+**Description**: View and manage instructor's weekly schedule.
+
+| Requirement ID | Description | Priority |
+|----------------|-------------|----------|
+| SCHED-INST-001 | Weekly schedule view | P0 |
+| SCHED-INST-002 | Display personal training sessions | P0 |
+| SCHED-INST-003 | Display group classes | P0 |
+| SCHED-INST-004 | Show available slots | P0 |
+| SCHED-INST-005 | Display client names for sessions | P0 |
+| SCHED-INST-006 | Show session duration and time | P0 |
+
+**Acceptance Criteria**:
+- [x] 7-day week view
+- [x] 20+ sessions displayed
+- [x] Session types: personal_training, class, available
+- [x] Client assignment shown
+- [x] Time slots from morning to evening
+- [x] Recurring session indicators
+
+#### 5.2.12 Member Training Plan View
+
+**Description**: Members view their assigned training program.
+
+| Requirement ID | Description | Priority |
+|----------------|-------------|----------|
+| MEMBER-PLAN-001 | Display current active program | P0 |
+| MEMBER-PLAN-002 | Show current week and progress | P0 |
+| MEMBER-PLAN-003 | 7-day calendar view | P0 |
+| MEMBER-PLAN-004 | Display daily workout details | P0 |
+| MEMBER-PLAN-005 | Show rest days | P0 |
+| MEMBER-PLAN-006 | Start workout button | P0 |
+| MEMBER-PLAN-007 | Track completed workouts | P1 |
+
+**Acceptance Criteria**:
+- [x] Program name and instructor display
+- [x] Week progress indicator (e.g., "Week 2 of 8")
+- [x] Completed workouts counter
+- [x] 7-day view with workout/rest indicators
+- [x] Daily workout details: name, exercises, duration, difficulty
+- [x] "Start Workout" button with gradient styling
+- [x] No-plan scenario with guidance message
+- [x] Rest day messaging with recovery tips
+
+#### 5.2.13 Member Onboarding Flow
+
+**Description**: Comprehensive 10-screen onboarding flow to collect member health profile and fitness goals.
+
+| Requirement ID | Description | Priority |
+|----------------|-------------|----------|
+| ONBOARD-001 | Welcome screen with app introduction | P0 |
+| ONBOARD-002 | Sex selection (male/female) | P0 |
+| ONBOARD-003 | Height input with visual reference | P0 |
+| ONBOARD-004 | Current weight input | P0 |
+| ONBOARD-005 | Goal weight input with BMI calculation | P0 |
+| ONBOARD-006 | Experience level selection | P0 |
+| ONBOARD-007 | Age input with validation | P0 |
+| ONBOARD-008 | Training frequency selection | P0 |
+| ONBOARD-009 | Main fitness goal selection | P0 |
+| ONBOARD-010 | Summary and plan generation | P0 |
+| ONBOARD-011 | Skip option with warning | P0 |
+| ONBOARD-012 | Progress indicator throughout flow | P0 |
+
+**Acceptance Criteria**:
+- [x] 10 sequential onboarding screens
+- [x] Step 1: Welcome with app overview
+- [x] Step 2: Sex selection with body illustrations
+- [x] Height screen: Unit toggle (cm/ft), visual representation
+- [x] Weight screen: Unit toggle (kg/lbs), visual slider
+- [x] Goal weight screen: BMI calculation and display
+- [x] Experience screen: Beginner/Intermediate/Advanced with descriptions
+- [x] Age screen: Numeric input with 14-100 validation
+- [x] Frequency screen: 1-7 days per week selection
+- [x] Step 3: Main goal selection (6 options: stronger, muscle, lean, weight loss, health, performance)
+- [x] Step 4: Summary with personalized recommendations
+- [x] Skip functionality with confirmation modal
+- [x] Progress bar showing completion percentage
+- [x] Data persistence across screens
+- [x] Visual assets for body parts and exercises
+- [x] Smooth transitions between screens
+
+**Visual Assets**:
+- Body anatomy illustrations (abs, arms, back, chest, fullbody, glutes, legs, shoulders)
+- Gender-specific height references (man_height.png, woman_height.png)
+- Exercise demonstration images
+
+#### 5.2.14 E-commerce Shop
+
+**Description**: Integrated shop for supplements, apparel, equipment, and accessories.
+
+| Requirement ID | Description | Priority |
+|----------------|-------------|----------|
+| SHOP-001 | Product catalog with grid layout | P0 |
+| SHOP-002 | Category filtering (all, supplements, apparel, equipment, accessories) | P0 |
+| SHOP-003 | Product cards with image, name, price | P0 |
+| SHOP-004 | Product rating display | P0 |
+| SHOP-005 | Stock availability indicator | P0 |
+| SHOP-006 | Add to cart functionality | P0 |
+| SHOP-007 | Product detail screen | P0 |
+| SHOP-008 | Shopping cart management | P0 |
+| SHOP-009 | Checkout flow | P0 |
+| SHOP-010 | Search functionality | P1 |
+| SHOP-011 | Product reviews | P2 |
+| SHOP-012 | Order history | P2 |
+
+**Acceptance Criteria**:
+- [x] Shop screen with horizontal category filter
+- [x] 4 product categories with icons
+- [x] Product grid (2 columns) with responsive layout
+- [x] Product cards showing: image, name, brand, price, rating, stock status
+- [x] Star rating display (0-5 stars)
+- [x] "Add to Cart" quick action button
+- [x] Product detail screen with full description
+- [x] Checkout screen with order summary
+- [x] Price calculation and total display
+- [x] Stock validation before purchase
+- [x] Mock product data (20+ products)
+- [x] Category icons from Feather icons
+- [x] Theming support (light/dark mode)
+
+**Product Categories**:
+- Supplements (protein powders, pre-workout, vitamins)
+- Apparel (gym shirts, shorts, hoodies)
+- Equipment (resistance bands, dumbbells, yoga mats)
+- Accessories (water bottles, gym bags, towels)
 
 ---
 
@@ -331,33 +595,80 @@ client/
 │   ├── ErrorBoundary.tsx     # Error handling
 │   ├── ErrorFallback.tsx     # Error UI
 │   ├── Spacer.tsx            # Layout spacing
-│   └── KeyboardAwareScrollViewCompat.tsx
+│   ├── KeyboardAwareScrollViewCompat.tsx
+│   └── instructor/           # Instructor-specific components
+│       ├── ClientSelector.tsx      # Multi-select client picker
+│       ├── ProgramAssignmentModal.tsx  # Program assignment UI
+│       ├── RoutineCard.tsx         # Routine display card
+│       └── ClientCard.tsx          # Client display card
 ├── screens/                   # Screen components
-│   ├── HomeScreen.tsx        # Dashboard
-│   ├── LoginScreen.tsx       # Authentication
-│   ├── RegisterScreen.tsx    # Registration
-│   ├── ProfileCompletionScreen.tsx
-│   ├── ScheduleScreen.tsx    # Class schedule
-│   ├── ProgressScreen.tsx    # Fitness tracking
-│   └── ProfileScreen.tsx     # Settings
+│   ├── member/               # Member screens
+│   │   ├── HomeScreen.tsx            # Member dashboard
+│   │   ├── MemberWorkoutsScreen.tsx  # Training plan view
+│   │   ├── WorkoutsScreen.tsx        # Workout history
+│   │   ├── ScheduleScreen.tsx        # Class schedule
+│   │   ├── ProgressScreen.tsx        # Progress tracking
+│   │   ├── ProfileScreen.tsx         # Settings
+│   │   ├── ShopScreen.tsx            # E-commerce shop (NEW)
+│   │   ├── ProductDetailScreen.tsx   # Product details (NEW)
+│   │   └── CheckoutScreen.tsx        # Checkout flow (NEW)
+│   ├── instructor/           # Instructor screens
+│   │   ├── InstructorDashboardScreen.tsx    # Instructor dashboard
+│   │   ├── InstructorClientsScreen.tsx      # Client list
+│   │   ├── ClientDetailScreen.tsx           # Client details
+│   │   ├── InstructorWorkoutsScreen.tsx     # Routines list
+│   │   ├── WorkoutBuilderScreen.tsx         # Routine builder
+│   │   ├── InstructorProgramsScreen.tsx     # Programs list
+│   │   ├── ProgramBuilderScreen.tsx         # Program builder
+│   │   ├── InstructorAssessmentsScreen.tsx  # Assessments list
+│   │   ├── AssessmentBuilderScreen.tsx      # Assessment creator
+│   │   ├── AssessmentDetailScreen.tsx       # Assessment history
+│   │   ├── InstructorScheduleScreen.tsx     # Schedule view
+│   │   └── ExerciseLibraryScreen.tsx        # Exercise selection
+│   ├── onboarding/           # Onboarding screens (NEW)
+│   │   ├── OnboardingStep1Screen.tsx        # Welcome
+│   │   ├── OnboardingStep2Screen.tsx        # Sex selection
+│   │   ├── OnboardingHeightScreen.tsx       # Height input
+│   │   ├── OnboardingWeightScreen.tsx       # Current weight
+│   │   ├── OnboardingGoalWeightScreen.tsx   # Goal weight
+│   │   ├── OnboardingExperienceScreen.tsx   # Experience level
+│   │   ├── OnboardingAgeScreen.tsx          # Age input
+│   │   ├── OnboardingFrequencyScreen.tsx    # Training frequency
+│   │   ├── OnboardingStep3Screen.tsx        # Main goal
+│   │   └── OnboardingStep4Screen.tsx        # Summary
+│   └── auth/                 # Authentication screens
+│       ├── LoginScreen.tsx
+│       ├── RegisterScreen.tsx
+│       └── ProfileCompletionScreen.tsx
 ├── navigation/               # Navigation configuration
-│   ├── RootStackNavigator.tsx
-│   ├── MainTabNavigator.tsx
+│   ├── RootStackNavigator.tsx            # Root navigation with onboarding
+│   ├── MainTabNavigator.tsx              # Member tabs (5 tabs)
+│   ├── InstructorTabNavigator.tsx        # Instructor tabs (6 tabs)
+│   ├── InstructorDashboardStackNavigator.tsx
+│   ├── InstructorClientsStackNavigator.tsx
+│   ├── InstructorWorkoutsStackNavigator.tsx
+│   ├── InstructorAssessmentsStackNavigator.tsx
+│   ├── InstructorScheduleStackNavigator.tsx
 │   ├── HomeStackNavigator.tsx
+│   ├── WorkoutsStackNavigator.tsx        # Member workouts (NEW)
 │   ├── ScheduleStackNavigator.tsx
 │   ├── ProgressStackNavigator.tsx
-│   └── ProfileStackNavigator.tsx
+│   ├── ProfileStackNavigator.tsx
+│   └── ShopStackNavigator.tsx            # E-commerce navigation (NEW)
 ├── context/                  # React Context providers
 │   └── AuthContext.tsx       # Authentication state
 ├── hooks/                    # Custom React hooks
 │   ├── useTheme.ts          # Theme management
 │   └── ...
 ├── constants/               # App constants
-│   └── Colors.ts            # Color palette
+│   └── theme.ts             # Theme system and color palette
+├── types/                   # TypeScript types
+│   ├── assessment.ts        # Assessment interfaces
+│   └── shop.ts              # E-commerce types (NEW)
 ├── lib/                     # Utilities
 │   └── api.ts              # API client
 └── data/                    # Mock data
-    └── mockData.ts
+    └── mockData.ts          # Comprehensive mock data (1500+ lines)
 ```
 
 ### 6.4 Backend Architecture
@@ -375,15 +686,17 @@ shared/
 
 ### 6.5 Database Schema
 
+**Current Implementation Status**: Basic users table implemented. Additional tables pending backend integration.
+
 ```sql
--- Users Table
+-- Users Table (✅ IMPLEMENTED)
 CREATE TABLE users (
   id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
   username TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL
 );
 
--- Members Table (Planned)
+-- Members Table (🔴 Planned)
 CREATE TABLE members (
   id VARCHAR PRIMARY KEY REFERENCES users(id),
   full_name TEXT NOT NULL,
@@ -491,6 +804,86 @@ CREATE TABLE workouts (
   notes TEXT,
   workout_date DATE DEFAULT CURRENT_DATE,
   created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Exercises Library table
+CREATE TABLE exercises (
+  id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  description TEXT,
+  muscle_group VARCHAR(50),
+  equipment VARCHAR(50),
+  video_url TEXT,
+  is_custom BOOLEAN DEFAULT FALSE,
+  created_by VARCHAR REFERENCES users(id), -- Only if is_custom is TRUE
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Workout Routines (Templates)
+CREATE TABLE workout_routines (
+  id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+  instructor_id VARCHAR REFERENCES users(id),
+  name TEXT NOT NULL,
+  description TEXT,
+  difficulty VARCHAR(20) CHECK (difficulty IN ('beginner', 'intermediate', 'advanced')),
+  category VARCHAR(30) CHECK (category IN ('strength', 'hypertrophy', 'cardio', 'functional', 'powerlifting', 'mixed')),
+  estimated_duration_minutes INTEGER,
+  is_template BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Routine Exercises (Join table with usage details)
+CREATE TABLE routine_exercises (
+  id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+  routine_id VARCHAR REFERENCES workout_routines(id) ON DELETE CASCADE,
+  exercise_id VARCHAR REFERENCES exercises(id),
+  order_index INTEGER NOT NULL,
+  sets INTEGER,
+  reps_min INTEGER,
+  reps_max INTEGER,
+  rest_seconds INTEGER,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Training Programs (Macro-cycles)
+CREATE TABLE training_programs (
+  id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+  instructor_id VARCHAR REFERENCES users(id),
+  name TEXT NOT NULL,
+  description TEXT,
+  duration_weeks INTEGER NOT NULL,
+  difficulty VARCHAR(20),
+  category VARCHAR(30),
+  is_template BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Weekly Schedule for Programs (Which routine on which day)
+CREATE TABLE program_schedule (
+  id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+  program_id VARCHAR REFERENCES training_programs(id) ON DELETE CASCADE,
+  day_of_week INTEGER CHECK (day_of_week BETWEEN 0 AND 6), -- 0=Monday, 6=Sunday
+  routine_id VARCHAR REFERENCES workout_routines(id), -- NULL means rest day
+  is_rest_day BOOLEAN DEFAULT FALSE,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Program Assignments (Active plans for members)
+CREATE TABLE program_assignments (
+  id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+  program_id VARCHAR REFERENCES training_programs(id),
+  member_id VARCHAR REFERENCES members(id),
+  instructor_id VARCHAR REFERENCES users(id),
+  start_date DATE NOT NULL,
+  end_date DATE,
+  status VARCHAR(20) CHECK (status IN ('active', 'completed', 'cancelled')),
+  current_week INTEGER DEFAULT 1,
+  assigned_at TIMESTAMP DEFAULT NOW(),
+  completed_at TIMESTAMP
 );
 ```
 
@@ -871,6 +1264,239 @@ interface OnboardingData {
 }
 ```
 
+### 9.7 Exercise and Routine Models (✅ IMPLEMENTED)
+
+```typescript
+// Exercise Definition
+interface Exercise {
+  id: string;
+  name: string;
+  category: 'strength' | 'cardio' | 'flexibility' | 'balance' | 'plyometric';
+  muscleGroups: string[]; // ['chest', 'triceps'] or ['back', 'biceps']
+  equipment: string; // 'barbell', 'dumbbell', 'bodyweight', etc.
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  description: string;
+  instructions: string[];
+}
+
+// Exercise within a Routine
+interface RoutineExercise {
+  exerciseId: string;
+  sets: number;
+  reps: number;
+  restSeconds: number;
+  orderIndex: number;
+  notes?: string;
+}
+
+// Workout Routine Template
+interface WorkoutRoutine {
+  id: string;
+  instructorId: string;
+  name: string;
+  description: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  category: 'strength' | 'hypertrophy' | 'cardio' | 'functional' | 'powerlifting' | 'mixed';
+  durationMinutes: number;
+  exercises: RoutineExercise[];
+  isTemplate: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+### 9.8 Training Program Models (✅ IMPLEMENTED)
+
+```typescript
+// Daily Schedule Item
+interface ProgramDaySchedule {
+  dayOfWeek: number; // 0-6 (Monday-Sunday)
+  routineId: string | null; // null if rest day
+  isRestDay: boolean;
+}
+
+// Training Program (Macro-cycle)
+interface TrainingProgram {
+  id: string;
+  instructorId: string;
+  name: string;
+  description: string;
+  durationWeeks: number;
+  weeklySchedule: ProgramDaySchedule[]; // 7 days
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  category: 'strength' | 'hypertrophy' | 'cardio' | 'functional' | 'powerlifting' | 'mixed';
+  isTemplate: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Program Assignment to Client
+interface ProgramAssignment {
+  id: string;
+  programId: string;
+  clientId: string;
+  instructorId: string;
+  startDate: string;
+  endDate: string;
+  status: 'active' | 'completed' | 'cancelled';
+  currentWeek: number;
+  completedWorkouts: number;
+  totalWorkouts: number;
+  assignedAt: string;
+  completedAt?: string;
+}
+```
+
+### 9.9 Physical Assessment Models (✅ IMPLEMENTED)
+
+```typescript
+// Body Composition Data
+interface BodyComposition {
+  weight: number; // kg
+  bodyFatPercentage: number;
+  muscleMassPercentage: number;
+  bmi: number;
+}
+
+// Body Measurements
+interface BodyMeasurements {
+  chest: number; // cm
+  waist: number; // cm
+  hips: number; // cm
+  leftArm: number; // cm
+  rightArm: number; // cm
+  leftThigh: number; // cm
+  rightThigh: number; // cm
+}
+
+// Performance Test
+interface PerformanceTest {
+  id: string;
+  testType: '1rm_bench' | '1rm_squat' | '1rm_deadlift' | 'pushups_60s' |
+            'situps_60s' | 'plank_hold' | 'sit_and_reach' | 'vo2_max' | 'custom';
+  value: number;
+  unit: string; // 'kg', 'reps', 'seconds', 'cm', 'ml/kg/min'
+  customTestName?: string;
+  notes?: string;
+}
+
+// Assessment Photo
+interface AssessmentPhoto {
+  id: string;
+  photoUrl: string;
+  angle: 'front' | 'side' | 'back';
+  uploadedAt: string;
+}
+
+// Physical Assessment
+interface PhysicalAssessment {
+  id: string;
+  memberId: string;
+  instructorId: string;
+  assessmentDate: string;
+  assessmentType: 'initial' | 'progress';
+  bodyComposition: BodyComposition;
+  bodyMeasurements: BodyMeasurements;
+  performanceTests: PerformanceTest[];
+  photos: AssessmentPhoto[];
+  instructorNotes: string;
+  recommendations: string;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+### 9.10 Instructor Client Model (✅ IMPLEMENTED)
+
+```typescript
+interface InstructorClient {
+  id: string;
+  fullName: string;
+  email: string;
+  profilePhoto?: string;
+  membershipTier: 'bronze' | 'silver' | 'gold';
+  assignedAt: string;
+  lastWorkout?: string;
+  complianceRate: number; // 0-100
+  currentProgram?: {
+    id: string;
+    name: string;
+    weeklyFrequency: number;
+  };
+  notes?: string; // Instructor notes about client
+}
+```
+
+### 9.11 Instructor Schedule Model (✅ IMPLEMENTED)
+
+```typescript
+interface ScheduleSession {
+  id: string;
+  instructorId: string;
+  clientId?: string;
+  clientName?: string;
+  dayOfWeek: number; // 0-6
+  date?: string; // ISO date for specific sessions
+  startTime: string; // HH:mm
+  endTime: string;
+  durationMinutes: number;
+  sessionType: 'personal_training' | 'class' | 'available';
+  recurring: boolean;
+  notes?: string;
+}
+```
+
+### 9.12 E-commerce Shop Models (✅ IMPLEMENTED)
+
+```typescript
+// Product Model
+interface ShopProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: 'supplements' | 'apparel' | 'equipment' | 'accessories';
+  imageUrl?: string;
+  stock: number;
+  inStock: boolean;
+  brand?: string;
+  rating?: number; // 0-5
+  reviewCount?: number;
+}
+
+// Category Model
+interface ShopCategory {
+  key: string;
+  label: string;
+  icon: string; // Feather icon name
+}
+
+// Cart Item Model
+interface CartItem {
+  product: ShopProduct;
+  quantity: number;
+}
+
+// Order Model
+interface ShopOrder {
+  id: string;
+  userId: string;
+  items: CartItem[];
+  total: number;
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  orderDate: string;
+  deliveryDate?: string;
+  shippingAddress?: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  paymentMethod?: string;
+}
+```
+
 ---
 
 ## 10. API Specifications
@@ -922,7 +1548,7 @@ interface OnboardingData {
 | POST | `/api/progress/workouts` | Log new workout |
 | GET | `/api/progress/achievements` | Get user achievements |
 
-### 10.6 Onboarding / Health Profile Endpoints
+### 10.6 Onboarding / Health Profile Endpoints (🔴 Planned)
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -970,6 +1596,128 @@ interface OnboardingData {
     "onboardingCompletedAt": "2025-12-15T10:30:00Z",
     "createdAt": "2025-12-15T10:30:00Z",
     "updatedAt": "2025-12-15T10:30:00Z"
+  }
+}
+```
+
+### 10.7 Instructor - Client Management Endpoints (🔴 Planned)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/instructor/clients` | List all assigned clients |
+| GET | `/api/instructor/clients/:id` | Get client details |
+| GET | `/api/instructor/clients/:id/assessments` | Get client assessment history |
+| GET | `/api/instructor/clients/:id/programs` | Get client's program assignments |
+| PATCH | `/api/instructor/clients/:id/notes` | Update instructor notes for client |
+
+### 10.8 Instructor - Workout Routine Endpoints (🔴 Planned)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/instructor/routines` | List instructor's workout routines |
+| GET | `/api/instructor/routines/:id` | Get routine details |
+| POST | `/api/instructor/routines` | Create new routine |
+| PATCH | `/api/instructor/routines/:id` | Update routine |
+| DELETE | `/api/instructor/routines/:id` | Delete routine |
+| GET | `/api/exercises` | Get exercise library |
+
+### 10.9 Instructor - Training Program Endpoints (🔴 Planned)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/instructor/programs` | List instructor's training programs |
+| GET | `/api/instructor/programs/:id` | Get program details |
+| POST | `/api/instructor/programs` | Create new program |
+| PATCH | `/api/instructor/programs/:id` | Update program |
+| DELETE | `/api/instructor/programs/:id` | Delete program |
+| POST | `/api/instructor/programs/:id/assign` | Assign program to clients |
+| DELETE | `/api/instructor/programs/assignments/:id` | Remove program assignment |
+
+### 10.10 Instructor - Assessment Endpoints (🔴 Planned)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/instructor/assessments` | List all assessments by instructor |
+| GET | `/api/instructor/assessments/:clientId` | Get assessments for specific client |
+| POST | `/api/instructor/assessments` | Create new assessment |
+| PATCH | `/api/instructor/assessments/:id` | Update assessment |
+| DELETE | `/api/instructor/assessments/:id` | Delete assessment |
+| POST | `/api/instructor/assessments/:id/photos` | Upload assessment photos |
+
+### 10.11 Instructor - Schedule Endpoints (🔴 Planned)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/instructor/schedule` | Get instructor's schedule |
+| GET | `/api/instructor/schedule/:date` | Get schedule for specific date |
+| POST | `/api/instructor/schedule/sessions` | Create new session |
+| PATCH | `/api/instructor/schedule/sessions/:id` | Update session |
+| DELETE | `/api/instructor/schedule/sessions/:id` | Delete session |
+
+### 10.12 Instructor - Dashboard Endpoints (🔴 Planned)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/instructor/stats` | Get instructor dashboard statistics |
+| GET | `/api/instructor/today` | Get today's sessions and highlights |
+
+### 10.13 Member - Training Program Endpoints (🔴 Planned)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/member/programs/active` | Get member's active training program |
+| GET | `/api/member/programs/history` | Get program assignment history |
+| POST | `/api/member/programs/:assignmentId/workouts/:workoutId/complete` | Mark workout as completed |
+| GET | `/api/member/programs/:assignmentId/progress` | Get program progress details |
+
+### 10.14 E-commerce Shop Endpoints (🔴 Planned)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/shop/products` | List all products with pagination |
+| GET | `/api/shop/products/:id` | Get product details |
+| GET | `/api/shop/products/category/:category` | Get products by category |
+| GET | `/api/shop/categories` | List all product categories |
+| POST | `/api/shop/cart` | Add item to cart |
+| GET | `/api/shop/cart` | Get user's cart |
+| PATCH | `/api/shop/cart/:itemId` | Update cart item quantity |
+| DELETE | `/api/shop/cart/:itemId` | Remove item from cart |
+| POST | `/api/shop/checkout` | Process checkout |
+| GET | `/api/shop/orders` | Get user's order history |
+| GET | `/api/shop/orders/:id` | Get order details |
+| POST | `/api/shop/products/:id/review` | Add product review |
+| GET | `/api/shop/products/:id/reviews` | Get product reviews |
+
+**Request Body Example (POST /api/shop/checkout):**
+```json
+{
+  "items": [
+    {
+      "productId": "prod-123",
+      "quantity": 2
+    }
+  ],
+  "shippingAddress": {
+    "street": "123 Main St",
+    "city": "New York",
+    "state": "NY",
+    "zipCode": "10001",
+    "country": "USA"
+  },
+  "paymentMethod": "credit_card"
+}
+```
+
+**Response Example:**
+```json
+{
+  "success": true,
+  "data": {
+    "orderId": "order-456",
+    "status": "pending",
+    "total": 89.98,
+    "estimatedDelivery": "2026-01-15",
+    "trackingNumber": null
   }
 }
 ```
@@ -1070,54 +1818,139 @@ interface OnboardingData {
 
 ## 14. Release Plan
 
-### 14.1 Phase 1 - MVP (Q1 2025)
+### 14.1 Phase 1 - MVP (Q1 2025) ✅ COMPLETE
 
 **Target Date**: January 31, 2025
+**Status**: ✅ Completed December 2025
 
 | Feature | Status |
 |---------|--------|
 | Authentication (Email) | ✅ Complete |
 | Profile management | ✅ Complete |
-| Dashboard | ✅ Complete |
+| Member Dashboard | ✅ Complete |
 | Schedule viewing | ✅ Complete |
 | Progress viewing | ✅ Complete |
 | Theme support | ✅ Complete |
 
-### 14.2 Phase 2 - Core Features (Q2 2025)
+### 14.2 Phase 2 - Instructor Module (December 2025) ✅ COMPLETE
 
-**Target Date**: April 30, 2025
+**Target Date**: December 31, 2025
+**Status**: ✅ Completed December 19, 2025
+
+| Feature | Status |
+|---------|--------|
+| Instructor Dashboard | ✅ Complete |
+| Client Management System | ✅ Complete |
+| Workout Routine Builder | ✅ Complete |
+| Training Program Builder | ✅ Complete |
+| Physical Assessment System | ✅ Complete |
+| Program Assignment to Clients | ✅ Complete |
+| Exercise Library (32+ exercises) | ✅ Complete |
+| Instructor Schedule View | ✅ Complete |
+| Member Training Plan View | ✅ Complete |
+| ClientSelector Component | ✅ Complete |
+| ProgramAssignmentModal | ✅ Complete |
+| InstructorTabNavigator (6 tabs) | ✅ Complete |
+
+**Key Achievements**:
+- 12 new instructor screens implemented
+- 4 new instructor-specific components
+- 6 new navigation stacks for instructor module
+- Complete mock data structure for testing
+- Comprehensive TypeScript type definitions
+- Full UI/UX implementation with theming support
+
+### 14.3 Phase 3 - Member Experience Enhancement (January 2026) ✅ COMPLETE
+
+**Target Date**: January 15, 2026
+**Status**: ✅ Completed January 6, 2026
+
+| Feature | Status |
+|---------|--------|
+| Member Onboarding Flow (10 screens) | ✅ Complete |
+| Health Profile Collection | ✅ Complete |
+| Body Metrics Input (Height, Weight, BMI) | ✅ Complete |
+| Fitness Goal Selection | ✅ Complete |
+| Experience Level Assessment | ✅ Complete |
+| Training Frequency Planning | ✅ Complete |
+| E-commerce Shop Integration | ✅ Complete |
+| Product Catalog with Categories | ✅ Complete |
+| Shopping Cart Functionality | ✅ Complete |
+| Checkout Flow | ✅ Complete |
+| Product Rating & Reviews Display | ✅ Complete |
+| Onboarding Visual Assets | ✅ Complete |
+| Enhanced Theme System | ✅ Complete |
+
+**Key Achievements**:
+- 10 comprehensive onboarding screens with smooth UX flow
+- Complete health profile data collection system
+- BMI calculation and goal tracking
+- 13 onboarding visual assets (body parts, exercises, height references)
+- Full e-commerce module with 3 screens
+- 20+ mock products across 4 categories
+- Shopping cart and checkout implementation
+- Product rating and review system UI
+- Enhanced theming with new color gradients
+- 1500+ lines of comprehensive mock data
+- Complete TypeScript type definitions for shop
+- ShopStackNavigator with 3 screens
+
+### 14.4 Phase 4 - Backend Integration (Q1 2026)
+
+**Target Date**: March 31, 2026
+**Status**: 🔴 Planned
 
 | Feature | Status |
 |---------|--------|
 | Supabase Auth integration | 🔴 Planned |
-| Class booking system | 🔴 Planned |
-| Workout logging | 🔴 Planned |
+| API endpoint implementation | 🔴 Planned |
+| Database migration and seeding | 🔴 Planned |
+| Real-time data synchronization | 🔴 Planned |
+| Image upload for assessments | 🔴 Planned |
 | Push notifications | 🔴 Planned |
 | Social login | 🔴 Planned |
+| Payment gateway integration (Stripe/PayPal) | 🔴 Planned |
+| Order processing backend | 🔴 Planned |
 
-### 14.3 Phase 3 - Enhanced Experience (Q3 2025)
+### 14.5 Phase 5 - Member Features (Q2 2026)
 
-**Target Date**: July 31, 2025
+**Target Date**: June 30, 2026
+**Status**: 🔴 Planned
 
 | Feature | Status |
 |---------|--------|
-| QR check-in | 🟡 In Progress |
+| Class booking system | 🔴 Planned |
+| Workout logging and tracking | 🔴 Planned |
 | Achievement system | 🔴 Planned |
-| Waitlist management | 🔴 Planned |
-| Instructor profiles | 🔴 Planned |
-| Class reviews/ratings | 🔴 Planned |
+| Progress photo comparison | 🔴 Planned |
+| Workout history with analytics | 🔴 Planned |
+| Personal records tracking | 🔴 Planned |
 
-### 14.4 Phase 4 - Platform Expansion (Q4 2025)
+### 14.6 Phase 6 - Enhanced Experience (Q3 2026)
 
-**Target Date**: October 31, 2025
+**Target Date**: September 30, 2026
+**Status**: 🔴 Planned
 
 | Feature | Status |
 |---------|--------|
-| Instructor tablet UI | 🔴 Planned |
+| QR check-in | 🔴 Planned |
+| Waitlist management | 🔴 Planned |
+| Class reviews/ratings | 🔴 Planned |
+| Social features (feed, challenges) | 🔴 Planned |
+| Nutrition tracking integration | 🔴 Planned |
+
+### 14.7 Phase 7 - Platform Expansion (Q4 2026)
+
+**Target Date**: December 31, 2026
+**Status**: 🔴 Planned
+
+| Feature | Status |
+|---------|--------|
 | Manager web panel | 🔴 Planned |
 | Analytics dashboard | 🔴 Planned |
 | Reporting system | 🔴 Planned |
-| API for integrations | 🔴 Planned |
+| API for third-party integrations | 🔴 Planned |
+| Multi-gym support | 🔴 Planned |
 
 ---
 
@@ -1186,11 +2019,22 @@ NODE_ENV=development|production
 | Term | Definition |
 |------|------------|
 | **Member** | End user who uses the gym and the app |
-| **Instructor** | Gym staff who leads classes |
+| **Instructor** | Gym professional who creates programs, routines, and conducts assessments |
 | **Manager** | Gym administrator with full access |
 | **Booking** | Reserved spot in a class |
 | **Waitlist** | Queue for full classes |
 | **PR** | Personal Record - best achievement |
+| **Routine** | Single workout template with exercises, sets, and reps |
+| **Program** | Multi-week training plan with weekly schedule |
+| **Assessment** | Physical evaluation including body composition, measurements, and performance tests |
+| **Compliance Rate** | Percentage of assigned workouts completed by a client |
+| **Assignment** | Active program assigned to a member by an instructor |
+| **Onboarding** | Initial setup flow for new members to collect health profile and goals |
+| **BMI** | Body Mass Index - calculated from height and weight |
+| **Health Profile** | Member's physical metrics, goals, and training preferences collected during onboarding |
+| **Shop** | E-commerce section for purchasing supplements, apparel, equipment, and accessories |
+| **Cart** | Shopping cart containing products ready for checkout |
+| **Order** | Completed purchase transaction with delivery tracking |
 
 ### 16.4 References
 
@@ -1207,6 +2051,26 @@ NODE_ENV=development|production
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | Dec 9, 2025 | ChongTechnologies | Initial PRD |
+| 2.0 | Dec 19, 2025 | ChongTechnologies | Major update: Instructor Module complete, updated architecture, new data models, API specifications, release plan |
+| 3.0 | Jan 6, 2026 | ChongTechnologies | Major update: Member onboarding flow, E-commerce shop, enhanced features |
+
+**Version 3.0 Summary of Changes**:
+- Added comprehensive Member Onboarding Flow documentation (10 screens)
+- Added complete E-commerce Shop module (3 screens, full catalog system)
+- Updated feature priority matrix with 13+ new completed features
+- Added detailed feature specifications for onboarding (section 5.2.13)
+- Added detailed feature specifications for shop (section 5.2.14)
+- Updated technical architecture with onboarding and shop screens
+- Added new data models: ShopProduct, ShopCategory, CartItem, ShopOrder
+- Added shop API endpoints (section 10.14)
+- Added Phase 3 completion to release plan (Member Experience Enhancement)
+- Updated navigation structure with WorkoutsStackNavigator and ShopStackNavigator
+- Added 13 onboarding visual assets to documentation
+- Added 20+ shop mock products documentation
+- Updated glossary with onboarding and e-commerce terms
+- Updated business goals with e-commerce revenue targets
+- Enhanced theme system documentation with new gradients
+- Updated statistics: 11,500+ lines added across 86 files
 
 ---
 

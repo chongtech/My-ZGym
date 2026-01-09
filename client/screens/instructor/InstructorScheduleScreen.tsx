@@ -46,7 +46,7 @@ export default function InstructorScheduleScreen() {
               <ThemedText
                 type="small"
                 style={{
-                  color: selectedDay === index ? "#000" : theme.textSecondary,
+                  color: selectedDay === index ? theme.text : theme.textSecondary,
                   fontWeight: selectedDay === index ? "700" : "400",
                 }}
               >
@@ -106,7 +106,7 @@ export default function InstructorScheduleScreen() {
                               : "clock"
                         }
                         size={16}
-                        color="#fff"
+                        color={theme.backgroundDefault}
                       />
                     </View>
                     <View style={{ flex: 1 }}>

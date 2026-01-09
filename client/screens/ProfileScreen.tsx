@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { View, StyleSheet, ScrollView, Pressable, Switch, Alert } from "react-native";
+import { View, StyleSheet, ScrollView, Pressable, Switch, Alert, Modal } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
+
+import { ProfileStackParamList } from "@/navigation/ProfileStackNavigator";
 
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
@@ -77,14 +81,36 @@ function SettingItem({
   );
 }
 
+type ProfileScreenNavigationProp = NativeStackNavigationProp<ProfileStackParamList>;
+
 export default function ProfileScreen() {
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
-  const { theme } = useTheme();
+  const { theme, themeMode, setThemeMode } = useTheme();
   const { user, logout } = useAuth();
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [themeModalVisible, setThemeModalVisible] = useState(false);
+
+  const getThemeLabel = () => {
+    switch (themeMode) {
+      case "light":
+        return "Claro";
+      case "dark":
+        return "Escuro";
+      case "system":
+        return "Sistema";
+      default:
+        return "Sistema";
+    }
+  };
+
+  const handleThemeChange = async (mode: "light" | "dark" | "system") => {
+    await setThemeMode(mode);
+    setThemeModalVisible(false);
+  };
 
   const handleLogout = () => {
     Alert.alert(
@@ -261,30 +287,45 @@ export default function ProfileScreen() {
           switchValue={notificationsEnabled}
           onSwitchChange={setNotificationsEnabled}
         />
-        <SettingItem icon="moon" label="Tema" value="Sistema" />
+        <SettingItem
+          icon="moon"
+          label="Tema"
+          value={getThemeLabel()}
+          onPress={() => setThemeModalVisible(true)}
+        />
         <SettingItem icon="globe" label="Idioma" value="Português" />
       </Card>
 
-      <Card style={styles.section} elevation={1}>
-        <ThemedText type="h4" style={styles.sectionTitle}>
-          Subscrição
-        </ThemedText>
-        <SettingItem
-          icon="credit-card"
-          label="Plano Atual"
-          value={`Subscrição ${(user?.membershipTier || "bronze").charAt(0).toUpperCase() + (user?.membershipTier || "bronze").slice(1)}`}
-        />
-        <SettingItem icon="calendar" label="Data de Renovação" value={user?.membershipExpiry || "N/A"} />
-        <SettingItem icon="arrow-up-circle" label="Atualizar Plano" />
-      </Card>
+      {user?.role !== 'manager' && user?.role !== 'instructor' && (
+        <Card style={styles.section} elevation={1}>
+          <ThemedText type="h4" style={styles.sectionTitle}>
+            Subscrição
+          </ThemedText>
+          <SettingItem
+            icon="credit-card"
+            label="Plano Atual"
+            value={`Subscrição ${(user?.membershipTier || "bronze").charAt(0).toUpperCase() + (user?.membershipTier || "bronze").slice(1)}`}
+            showChevron={false}
+          />
+          <SettingItem
+            icon="calendar"
+            label="Data de Renovação"
+            value={user?.membershipExpiry ? new Date(user.membershipExpiry).toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' }) : "N/A"}
+            showChevron={false}
+          />
+          <SettingItem
+            icon="arrow-up-circle"
+            label="Gerir Plano"
+            onPress={() => navigation.navigate('MembershipManagement')}
+          />
+        </Card>
+      )}
 
       <Card style={styles.section} elevation={1}>
         <ThemedText type="h4" style={styles.sectionTitle}>
           Conta
         </ThemedText>
         <SettingItem icon="lock" label="Alterar Palavra-passe" />
-        <SettingItem icon="shield" label="Definições de Privacidade" />
-        <SettingItem icon="help-circle" label="Ajuda e Suporte" />
         <SettingItem
           icon="log-out"
           label="Terminar Sessão"
@@ -305,6 +346,102 @@ export default function ProfileScreen() {
           My-ZGym v1.0.0
         </ThemedText>
       </View>
+
+      <Modal
+        visible={themeModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setThemeModalVisible(false)}
+      >
+        <Pressable
+          style={styles.modalOverlay}
+          onPress={() => setThemeModalVisible(false)}
+        >
+          <Pressable style={[styles.modalContent, { backgroundColor: theme.backgroundDefault }]}>
+            <View style={styles.modalHeader}>
+              <ThemedText type="h3">Escolher Tema</ThemedText>
+              <Pressable
+                onPress={() => setThemeModalVisible(false)}
+                style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}
+              >
+                <Feather name="x" size={24} color={theme.text} />
+              </Pressable>
+            </View>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.themeOption,
+                { opacity: pressed ? 0.7 : 1 },
+                themeMode === "light" && { backgroundColor: `${BrandColors.primary}15` },
+              ]}
+              onPress={() => handleThemeChange("light")}
+            >
+              <View style={styles.themeOptionContent}>
+                <View style={[styles.themeIcon, { backgroundColor: `${BrandColors.primary}20` }]}>
+                  <Feather name="sun" size={20} color={BrandColors.primary} />
+                </View>
+                <View style={styles.themeOptionText}>
+                  <ThemedText type="h4">Claro</ThemedText>
+                  <ThemedText type="small" style={{ color: theme.textSecondary }}>
+                    Tema sempre claro
+                  </ThemedText>
+                </View>
+              </View>
+              {themeMode === "light" && (
+                <Feather name="check" size={20} color={BrandColors.primary} />
+              )}
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.themeOption,
+                { opacity: pressed ? 0.7 : 1 },
+                themeMode === "dark" && { backgroundColor: `${BrandColors.primary}15` },
+              ]}
+              onPress={() => handleThemeChange("dark")}
+            >
+              <View style={styles.themeOptionContent}>
+                <View style={[styles.themeIcon, { backgroundColor: `${BrandColors.primary}20` }]}>
+                  <Feather name="moon" size={20} color={BrandColors.primary} />
+                </View>
+                <View style={styles.themeOptionText}>
+                  <ThemedText type="h4">Escuro</ThemedText>
+                  <ThemedText type="small" style={{ color: theme.textSecondary }}>
+                    Tema sempre escuro
+                  </ThemedText>
+                </View>
+              </View>
+              {themeMode === "dark" && (
+                <Feather name="check" size={20} color={BrandColors.primary} />
+              )}
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.themeOption,
+                { opacity: pressed ? 0.7 : 1 },
+                themeMode === "system" && { backgroundColor: `${BrandColors.primary}15` },
+              ]}
+              onPress={() => handleThemeChange("system")}
+            >
+              <View style={styles.themeOptionContent}>
+                <View style={[styles.themeIcon, { backgroundColor: `${BrandColors.primary}20` }]}>
+                  <Feather name="smartphone" size={20} color={BrandColors.primary} />
+                </View>
+                <View style={styles.themeOptionText}>
+                  <ThemedText type="h4">Sistema</ThemedText>
+                  <ThemedText type="small" style={{ color: theme.textSecondary }}>
+                    Segue as configurações do dispositivo
+                  </ThemedText>
+                </View>
+              </View>
+              {themeMode === "system" && (
+                <Feather name="check" size={20} color={BrandColors.primary} />
+              )}
+            </Pressable>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </ScrollView>
   );
 }
@@ -362,5 +499,48 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: Spacing.lg,
     paddingVertical: Spacing.lg,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: Spacing.xl,
+  },
+  modalContent: {
+    width: "100%",
+    maxWidth: 400,
+    borderRadius: 16,
+    padding: Spacing.xl,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: Spacing.xl,
+  },
+  themeOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: Spacing.lg,
+    borderRadius: 12,
+    marginBottom: Spacing.sm,
+  },
+  themeOptionContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  themeIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: Spacing.md,
+  },
+  themeOptionText: {
+    flex: 1,
   },
 });

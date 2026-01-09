@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -9,6 +9,7 @@ import { useRoute } from "@react-navigation/native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
+import { ProgramAssignmentModal } from "@/components/instructor/ProgramAssignmentModal";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing, BorderRadius, BrandColors } from "@/constants/theme";
 import { mockInstructorClients, mockWorkouts } from "@/data/mockData";
@@ -22,8 +23,26 @@ export default function ClientDetailScreen() {
   const tabBarHeight = useBottomTabBarHeight();
   const { theme } = useTheme();
   const route = useRoute<ClientDetailRouteProp>();
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [currentProgram, setCurrentProgram] = useState<string | undefined>(undefined);
 
   const client = mockInstructorClients.find((c) => c.id === route.params.clientId);
+
+  // Initialize current program
+  React.useEffect(() => {
+    if (client) {
+      setCurrentProgram(client.currentProgram);
+    }
+  }, [client]);
+
+  const handleAssignProgram = (routineId: string, routineName: string) => {
+    setCurrentProgram(routineName);
+    Alert.alert(
+      "Programa Atribuído",
+      `O programa "${routineName}" foi atribuído a ${client?.fullName} com sucesso!`,
+      [{ text: "OK" }]
+    );
+  };
 
   if (!client) {
     return (
@@ -100,13 +119,33 @@ export default function ClientDetailScreen() {
             <ThemedText type="h4">Programa Atual</ThemedText>
           </View>
           <ThemedText type="body" style={{ marginTop: Spacing.sm }}>
-            {client.currentProgram || "Sem programa atribuído"}
+            {currentProgram || "Sem programa atribuído"}
           </ThemedText>
           <ThemedText type="small" style={{ color: theme.textSecondary, marginTop: Spacing.xs }}>
             Atribuído em: {new Date(client.assignedAt).toLocaleDateString("pt-PT")}
           </ThemedText>
+
+          <Pressable
+            onPress={() => setShowAssignModal(true)}
+            style={{ marginTop: Spacing.md }}
+          >
+            <View style={[styles.assignButton, { backgroundColor: BrandColors.primary }]}>
+              <Feather name="edit-3" size={18} color={theme.text} />
+              <ThemedText type="body" style={{ color: theme.text, fontWeight: "600" }}>
+                {currentProgram ? "Alterar Programa" : "Atribuir Programa"}
+              </ThemedText>
+            </View>
+          </Pressable>
         </View>
       </Card>
+
+      <ProgramAssignmentModal
+        visible={showAssignModal}
+        clientName={client.fullName}
+        currentProgram={currentProgram}
+        onClose={() => setShowAssignModal(false)}
+        onAssign={handleAssignProgram}
+      />
 
       <Card elevation={1} style={{ marginBottom: Spacing.lg }}>
         <View style={styles.section}>
@@ -206,5 +245,13 @@ const styles = StyleSheet.create({
   workoutStats: {
     alignItems: "flex-end",
     gap: 2,
+  },
+  assignButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.sm,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.xl,
   },
 });
